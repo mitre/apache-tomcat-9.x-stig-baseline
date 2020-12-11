@@ -57,5 +57,12 @@ PKI office website at cyber.mil/pki-pke.
   tag fix_id: 'F-108049r1_fix'
   tag cci: ['CCI-000185']
   tag nist: ['IA-5 (2) (a)']
+
+  describe "This is a manual check" do 
+    skip "Check the truststore settings in the tomcat.service file. If the variable is not set then run the command: 
+    'keytool -list -cacerts -v | grep -i issuer' if the variable is already set then add an alternate location with the
+    command: 'keytool -list -keystore <location of trust store file> -v | grep -i issuer'"
+  end
+
 end
 

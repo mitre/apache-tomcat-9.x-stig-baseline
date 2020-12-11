@@ -45,5 +45,10 @@ there are no results, this is a finding.
   tag fix_id: 'F-108115r1_fix'
   tag cci: ['CCI-000172']
   tag nist: ['AU-12 c']
-end
 
+  describe "Changes to content in $CATALINA_BASE/lib directory must be logged" do 
+    skip "Check the audit rules for the Tomcat folders. If the results do not include 
+    -w $CATALINA_HOME/lib -p wa -k tomcat, or if there are no results, this is a finding."
+  end
+
+end

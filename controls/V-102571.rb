@@ -51,5 +51,9 @@ trust store.
   tag fix_id: 'F-108103r1_fix'
   tag cci: ['CCI-002470']
   tag nist: ['SC-23 (5)']
-end
 
+  describe "locate the keystore file and audit the issuer section" do
+    skip "If there are no CA certificates issued by a Certificate Authority (CA) that is part of the DoD PKI/PKE, this is a finding"
+  end
+
+end

@@ -57,5 +57,14 @@ failureCount=\"5\" lockOutTime=\"600\">
   tag fix_id: 'F-108079r1_fix'
   tag cci: ['CCI-002322']
   tag nist: ['AC-17 (9)']
-end
 
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  lockout_time = tomcat_server_file["//Realm/@lockOutTime"]
+
+  describe "The lock out time period for the LockoutRealm configuration must be set to 600 seconds" do 
+    subject { lockout_time }
+    it { should cmp "600" } 
+  end
+
+end

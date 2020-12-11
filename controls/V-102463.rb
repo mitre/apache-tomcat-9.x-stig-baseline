@@ -26,7 +26,7 @@ investigations."
     <Valve className=\"org.apache.catalina.valves.AccessLogValve\"
 directory=\"logs\"
                    prefix=\"localhost_access_log\" suffix=\".txt\"
-                   pattern=\"%h %l %t %u &quot;%r&quot; %s %b\" />
+                   pattern=\"%h %l %t %u \"%r\" %s %b\" />
       ...
     </Host>
   "
@@ -46,7 +46,7 @@ directory=\"logs\"
     <Valve className=\"org.apache.catalina.valves.AccessLogValve\"
 directory=\"logs\"
                    prefix=\"localhost_access_log\" suffix=\".txt\"
-                   pattern=\"%h %l %t %u &quot;%r&quot; %s %b\" />
+                   pattern=\"%h %l %t %u \"%r\" %s %b\" />
       ...
     </Host>
 
@@ -63,5 +63,17 @@ directory=\"logs\"
   tag fix_id: 'F-108001r1_fix'
   tag cci: ['CCI-000132']
   tag nist: ['AU-3']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+
+  access_log_valves = tomcat_server_file["//Valve/@className"].reject {|name| !name.include? "org.apache.catalina.valves.AccessLogValve" }
+  patterns = tomcat_server_file["//Valve/@pattern"].reject {|pattern| !pattern.include? "%h" }
+  
+  describe 'Each Valve element of class AccessLogValve must have the "%h" included in the pattern in order to log the remote hostname in the log file' do 
+    subject { access_log_valves.count } 
+    it {should cmp patterns.count }
+  end
+
 end
 

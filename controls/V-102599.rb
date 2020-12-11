@@ -41,5 +41,11 @@ of a CCRI.
   tag fix_id: 'F-108131r1_fix'
   tag cci: ['CCI-000366']
   tag nist: ['CM-6 b']
+
+  describe "Compare the active Connectors and their associated IP ports with the
+  Connectors documented and approved in the SSP" do 
+    skip "If the Connectors that are configured on the Tomcat server are not approved
+    by the ISSO and documented in the SSP, this is a finding."
+  end
 end
 

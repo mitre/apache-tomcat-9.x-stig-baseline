@@ -37,5 +37,10 @@ unapproved connectors, and restart Tomcat:
   tag fix_id: 'F-108021r1_fix'
   tag cci: ['CCI-000381']
   tag nist: ['CM-7 a']
+
+  describe "Unapproved connectors must be disabled" do
+    skip "Verify all connectors and their associated ports in the $CATALINA_HOME/conf/server.xml are approved in the SSP."
+  end
+
 end
 

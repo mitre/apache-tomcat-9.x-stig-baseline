@@ -54,5 +54,15 @@ failureCount=\"5\" lockOutTime=\"600\">
   tag fix_id: 'F-108075r1_fix'
   tag cci: ['CCI-002314']
   tag nist: ['AC-17 (1)']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  realms = tomcat_server_file["//Realm/@className"]
+    
+  describe "The LockOutRealm must be defined" do 
+    subject { realms } 
+    it { should include "org.apache.catalina.realm.LockOutRealm" }
+  end
+
 end
 

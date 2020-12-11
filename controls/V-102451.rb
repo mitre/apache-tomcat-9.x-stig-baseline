@@ -41,5 +41,41 @@ class = \"true\".
   tag fix_id: 'F-107991r1_fix'
   tag cci: ['CCI-000213']
   tag nist: ['AC-3']
-end
 
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_web_file = xml("#{catalina_base}/conf/web.xml") 
+  servlets = tomcat_web_file["//servlet/servlet-name"]
+  check_params = tomcat_web_file["//servlet/init-param/param-name"]
+  index = 0
+  param_index = 0
+
+  only_if("Run only if DefaultServlet has readonly enabled") do
+      check_params.include?("readonly")
+  end 
+
+  servlets.each do |servlet|
+      for i in 1..servlets.count
+          if servlet == "default"
+              index+=1
+              break
+          end
+      end
+  end
+  params = tomcat_web_file["//servlet[#{index}]/init-param/param-name"]
+
+  params.each do |param|
+      for i in 1..params.count
+          if param == "readonly"
+              index+=1
+              break
+          end
+      end
+  end
+
+  readonly = tomcat_web_file["//servlet[#{index}]/init-param[#{param_index}]/param-value"]
+  describe "The readonly param for the DefaultServlet element must be set to true" do 
+    subject { readonly } 
+    it { should cmp "true" }
+  end
+ 
+end

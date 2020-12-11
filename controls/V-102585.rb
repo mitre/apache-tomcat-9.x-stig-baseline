@@ -48,5 +48,13 @@ PKI office website at cyber.mil/pki-pke.
   tag fix_id: 'F-108117r1_fix'
   tag cci: ['CCI-002450']
   tag nist: ['SC-13']
-end
 
+  describe "The application server
+  must utilize approved DoD or CNS Class 3 or Class 4 certificates for software
+  signing and business-to-business transactions" do 
+    skip "Check the trustStore variable is set in the tomcat.service file. If it is not set run the 
+    command: \"keytool -list -cacerts -v | grep -i issuer\" to set the Default Location. If the default is already set then run the 
+    command: \"keytool -list -keystore <location of trust store file> -v |grep -i issuer\" to set the alternate location"
+  end
+
+end

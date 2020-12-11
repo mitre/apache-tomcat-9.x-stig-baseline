@@ -28,7 +28,7 @@ element is not nested within each $Host element, this is a finding.
     <Valve className=\"org.apache.catalina.valves.AccessLogValve\"
 directory=\"logs\"
      prefix=\"localhost_access_log\" suffix=\".txt\"
-     pattern=\"%h %l %t %u &quot;%r&quot; %s %b\" />
+     pattern=\"%h %l %t %u \"%r\" %s %b\" />
      ...
     </Host>
   "
@@ -47,7 +47,7 @@ containing an AccessLogValve.
     <Valve className=\"org.apache.catalina.valves.AccessLogValve\"
 directory=\"logs\"
      prefix=\"localhost_access_log\" suffix=\".txt\"
-     pattern=\"%h %l %t %u &quot;%r&quot; %s %b\" />
+     pattern=\"%h %l %t %u \"%r\" %s %b\" />
      ...
     </Host>
 
@@ -69,5 +69,15 @@ directory=\"logs\"
   tag cci: ['CCI-000130', 'CCI-000135', 'CCI-000171', 'CCI-000172',
 'CCI-001487']
   tag nist: ['AU-3', 'AU-3 (1)', 'AU-12 b', 'AU-12 c', 'AU-3']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml") 
+  hosts = tomcat_server_file["//Host"]
+  access_log_valves = tomcat_server_file["//Host/Valve/@className"].reject {|name| !name.include? "org.apache.catalina.valves.AccessLogValve" }
+
+  describe "Each Host container must have a nested Valve element with the AccessLogValve class name defined" do 
+    subject { hosts.count }
+    it { should eq access_log_valves.count } 
+  end 
 end
 

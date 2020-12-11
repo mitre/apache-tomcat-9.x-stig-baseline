@@ -40,5 +40,14 @@ restart the Tomcat server.
   tag fix_id: 'F-108019r1_fix'
   tag cci: ['CCI-000381']
   tag nist: ['CM-7 a']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  shutdown_port = tomcat_server_file["//Server/@port"]
+  
+  describe shutdown_port do 
+      it { should cmp '-1' }
+  end
+
 end
 

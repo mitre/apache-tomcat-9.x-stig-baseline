@@ -34,5 +34,15 @@ xpoweredBy=\"true\", modify the statement to read \", xpoweredBy=\"false\".
   tag fix_id: 'F-108031r1_fix'
   tag cci: ['CCI-000381']
   tag nist: ['CM-7 a']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  x_powered_by = tomcat_server_file["//Connector/@xpoweredBy"]
+  
+  describe "The xpoweredBy parameter must be set to false" do 
+    subject { x_powered_by }
+    it { should_not include "true" } 
+  end 
+
 end
 

@@ -14,10 +14,7 @@ STIG checks to ensure the FIPSMode setting is enabled for the connector and
 also checks the logs for FIPS errors, which indicates FIPS non-compliance at
 the OS or Java layers. The administrator is responsible for ensuring the OS and
 Java instance selected for the Tomcat installation provide and enable these
-FIPS modules so Tomcat can be configured to use them.
-
-
-  "
+FIPS modules so Tomcat can be configured to use them."
   desc  'rationale', ''
   desc  'check', "
     From the Tomcat server console, run the following two commands to verify
@@ -69,5 +66,15 @@ modify the FIPSMode setting and set it to FIPSMode=\"on\".
   tag cci: ['CCI-000803', 'CCI-001188', 'CCI-002418', 'CCI-002421',
 'CCI-002475', 'CCI-002476']
   tag nist: ['IA-7', 'SC-23 (3)', 'SC-8', 'SC-8 (1)', 'SC-28 (1)', 'SC-28 (1)']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  fipsmode = tomcat_server_file["//Listener/@FIPSMode"] 
+  
+  describe "FIPSmode must be defined and set to on" do 
+    subject { fipsmode }
+    it { should cmp "on" }
+  end 
+
 end
 

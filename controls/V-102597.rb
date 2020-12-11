@@ -36,5 +36,11 @@ of a CCRI.
   tag fix_id: 'F-108129r1_fix'
   tag cci: ['CCI-000366']
   tag nist: ['CM-6 b']
-end
 
+  describe "The ISSM/ISSO must be cognizant of all applications operating on the
+  Tomcat server" do 
+    skip "Review the Tomcat servers System Security Plan/server documentation. 
+    Access the Tomcat server and review the $CATALINA_BASE/webapps folder. Ensure that all webapps are documented in the SSP."
+  end 
+
+end

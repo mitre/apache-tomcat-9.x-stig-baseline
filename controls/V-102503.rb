@@ -26,5 +26,11 @@ installation which do not serve a production use. These files must be deleted."
   tag fix_id: 'F-108037r1_fix'
   tag cci: ['CCI-000381']
   tag nist: ['CM-7 a']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  describe file("#{catalina_base}/webapps/docs") do
+    its('exist?') { should cmp false }
+  end
+
 end
 

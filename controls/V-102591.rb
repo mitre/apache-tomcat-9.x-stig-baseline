@@ -58,5 +58,26 @@ the file using a text editor.
   tag fix_id: 'F-108123r1_fix'
   tag cci: ['CCI-000366']
   tag nist: ['CM-6 b']
-end
 
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_service_file = "/etc/systemd/system/tomcat.service"
+  environment = command("grep ALLOW_BACKSLASH #{tomcat_service_file}")
+  catalina_options = environment.stdout.split(" ")
+  allow_backslash = Array.new 
+
+  catalina_options.each do |option|
+    if option.include? "ALLOW_BACKSLASH"
+      allow_backslash.concat(option.split("=")[1])
+    end
+  end
+  
+  describe "The ALLOW_BACKSLASH setting must be set to true" do 
+    subject { allow_backslash }
+    it { should include "true" }
+  end
+
+  describe parse_config_file("#{catalina_base}/conf/catalina.properties") do
+    its('ALLOW_BACKSLASH') { should eq 'false' }
+  end
+
+end

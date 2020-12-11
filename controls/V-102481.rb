@@ -47,5 +47,11 @@ following commands if the system differs:
   tag fix_id: 'F-108015r1_fix'
   tag cci: ['CCI-001499']
   tag nist: ['CM-5 (6)']
+
+  tomcat_service_file = parse_config_file('/etc/systemd/system/tomcat.service')
+  describe tomcat_service_file do
+      its('UMask') { should cmp '0027' }
+  end
+  
 end
 

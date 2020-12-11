@@ -58,5 +58,15 @@ administrators are notified via email for those situations:
   tag fix_id: 'F-108149r4_fix'
   tag cci: ['CCI-000139']
   tag nist: ['AU-5 a']
+
+  describe "This requirement cannot be met by the Tomcat server natively and must be
+  done at the OS. Review operating system. Ensure the OS is configured to alert
+  the ISSO and SA in the event of an audit processing failure." do 
+    skip "The alert notification method itself can be accomplished in a variety of
+    ways and is not restricted to email alone. The intention is to send an alert,
+    the method used to send the alert is not a factor of the requirement. If the OS 
+    is not configured to alert the ISSO and SA in the event of an
+    audit processing failure, this is a finding."
+  end
 end
 

@@ -76,5 +76,21 @@ org.apache.catalina.STRICT_SERVLET_COMPLIANCE setting.
   tag fix_id: 'F-108119r1_fix'
   tag cci: ['CCI-000366']
   tag nist: ['CM-6 b']
-end
 
+  tomcat_service_file = '/etc/systemd/system/tomcat.service'
+  environment = command("grep STRICT_SERVLET_COMPLIANCE #{tomcat_service_file}")
+  catalina_options = environment.stdout.split(" ")
+  param = Array.new 
+
+  catalina_options.each do |option|
+    if option.include? "STRICT_SERVLET_COMPLIANCE"
+      param.concat(option.split("=")[1])
+    end
+  end
+
+  describe 'Strict servlet compliance must be set to true' do
+    subject { param } 
+    it { should include "true" }
+  end
+
+end

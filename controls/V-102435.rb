@@ -26,7 +26,7 @@ element is not defined within each $Context element, this is a finding.
     <Valve className=\"org.apache.catalina.valves.AccessLogValve\"
 directory=\"logs\"
                    prefix=\"application_name_log\" suffix=\".txt\"
-                   pattern=\"\"%h %l %t %u &quot;%r&quot; %s %b\" />
+                   pattern=\"\"%h %l %t %u \"%r\" %s %b\" />
       ...
     />
   "
@@ -45,7 +45,7 @@ containing an AccessLogValve.
     <Valve className=\"org.apache.catalina.valves.AccessLogValve\"
 directory=\"logs\"
                    prefix=\"application_name_log\" suffix=\".txt\"
-                   pattern=\"%h %l %t %u &quot;%r&quot; %s %b\" />
+                   pattern=\"%h %l %t %u \"%r\" %s %b\" />
       ...
     />
 
@@ -67,5 +67,20 @@ directory=\"logs\"
   tag cci: ['CCI-000067', 'CCI-000130', 'CCI-000133', 'CCI-000134',
 'CCI-000166', 'CCI-000169', 'CCI-000172']
   tag nist: ['AC-17 (1)', 'AU-3', 'AU-3', 'AU-3', 'AU-10', 'AU-12 a', 'AU-12 c']
-end
 
+  
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml") 
+  contexts = tomcat_server_file["//Context"]
+  access_log_valves = tomcat_server_file["//Context/Valve/@className"].reject {|name| !name.include? "org.apache.catalina.valves.AccessLogValve" }
+
+  only_if('Context container is not defined in server.xml. Skipping this check.') do 
+    contexts.empty?
+  end
+
+  describe "Each Context container must have a nested Valve element with the AccessLogValve class name defined" do 
+    subject { contexts.count }
+    it { should eq access_log_valves.count } 
+  end 
+
+end

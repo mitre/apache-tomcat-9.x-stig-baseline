@@ -23,6 +23,18 @@ privileged user, run the following command:
     sudo grep -i -A10 -B2 \"Cluster\" $CATALINA_BASE/conf/server.xml
 
     If the <Cluster/> element is commented out, or no results returned, then
+the system is not clustered and this is a finding.This requirement only applies to a system that is categorized as high
+within the Risk Management Framework (RMF).
+
+    Review the System Security Plan (SSP) or other system documentation that
+specifies the operational uptime requirements and RMF system categorization.
+
+    If the system is categorized as high, from the Tomcat server as a
+privileged user, run the following command:
+
+    sudo grep -i -A10 -B2 \"Cluster\" $CATALINA_BASE/conf/server.xml
+
+    If the <Cluster/> element is commented out, or no results returned, then
 the system is not clustered and this is a finding.
   "
   desc  'fix', "
@@ -43,5 +55,14 @@ as per the Tomcat clustering documentation provided at the Tomcat website.
   tag fix_id: 'F-108105r1_fix'
   tag cci: ['CCI-002385']
   tag nist: ['SC-5']
+
+  describe " Review the System Security Plan (SSP) or other system documentation that
+  specifies the operational uptime requirements and RMF system categorization" do
+    skip "This requirement only applies to a system that is categorized as high
+  within the Risk Management Framework (RMF). If the system is categorized as high 
+  then audit the server.xml file to determine if the <Cluster> element is 
+  configured. If the system is not clustered and then this is a finding."
+  end
+
 end
 

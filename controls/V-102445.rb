@@ -45,5 +45,17 @@ accessible to authorized personnel.
   tag fix_id: 'F-107985r1_fix'
   tag cci: ['CCI-000186', 'CCI-000213']
   tag nist: ['IA-5 (2) (b)', 'AC-3']
+
+  keystore_file = input("keystore_file", value: "/root/.keystore")
+
+  only_if("A keystore file does not exist. Skipping this check") do 
+    command("keytool -list -v -keystore #{keystore_file}").exist?
+  end
+
+  describe 'The default password for keystore is "changeit" sans quotes. If the following command: "keytool -list -v -keystore <keystore location>" grants access. This check has failed.' do
+    subject { command("keytool -list -v -keystore #{keystore_file}").exit_status }
+    it { should_not eq 0 }
+  end
+
 end
 

@@ -58,5 +58,15 @@ case-by-case basis as per the individual LDAP server and schema.
   tag fix_id: 'F-108041r1_fix'
   tag cci: ['CCI-000764']
   tag nist: ['IA-2']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  realms = tomcat_server_file["//Realm/@className"]
+
+  describe "LDAP authentication must be performed on the server. Check the Realm element for JNDIRealm configuration." do 
+    subject { realms }
+    it {should include "org.apache.catalina.realm.JNDIRealm" }
+  end
+
 end
 

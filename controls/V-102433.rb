@@ -54,5 +54,23 @@ Tomcat:
   tag fix_id: 'F-107975r4_fix'
   tag cci: ['CCI-000197', 'CCI-001453', 'CCI-002418']
   tag nist: ['IA-5 (1) (c)', 'AC-17 (2)', 'SC-8']
-end
 
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  connectors = tomcat_server_file["//Connector"]
+  ssl_enabled_protocols = tomcat_server_file["//Connector/@SSLEnabledProtocols"]
+
+  tls = ssl_enabled_protocols.reject{|protocol| protocol != "TLSv1.2" }
+
+  describe 'Each Connector should have "SSLEnabledProtocols" defined' do
+    subject { connectors.count }
+    it { should eq ssl_enabled_protocols.count }
+  end
+
+  describe "All SSLEnabledProtocol elements should have the value TLSv1.2" do
+    subject { tls.count }
+    it { should eq connectors.count }
+  end
+
+end

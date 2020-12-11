@@ -57,7 +57,7 @@ for STIG purposes is called \"tomcat.service\" and can be viewed as a link in
 the /etc/systemd/system/ folder.
 
     Run the following command:
-    sudo cat /etc/systemd/system/tomcat.service |grep -i security
+    sudo cat /etc/systemd/system/tomcat.service | grep -i security
 
     If there is a documented and approved risk acceptance for not operating the
 Security Manager, the finding can be reduced to a CAT III.
@@ -91,5 +91,10 @@ read:
   tag fix_id: 'F-107995r2_fix'
   tag cci: ['CCI-000213']
   tag nist: ['AC-3']
-end
 
+  tomcat_service_file = "/etc/systemd/system/tomcat.service"
+  describe command("cat #{tomcat_service_file} | grep ExecStart | grep -security") do
+    its('stdout') { should_not eq '' }
+  end
+
+end

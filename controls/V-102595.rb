@@ -32,5 +32,11 @@ and capabilities are approved by the ISSO.
   tag fix_id: 'F-108127r1_fix'
   tag cci: ['CCI-000366']
   tag nist: ['CM-6 b']
-end
 
+  describe "Ensure that user accounts and roles with access to Tomcat management
+  features are documented and approved by the ISSO" do 
+    skip "If the ISSO has not approved of documented roles and users who have
+    management rights to the Tomcat server, this is a finding"
+  end 
+
+end

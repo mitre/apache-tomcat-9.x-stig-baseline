@@ -49,5 +49,15 @@ autoDeploy=\"true\", modify the statement to read \", autoDeploy=\"false\".
   tag fix_id: 'F-108029r1_fix'
   tag cci: ['CCI-000381']
   tag nist: ['CM-7 a']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  auto_deploy = tomcat_server_file["//Host/@autoDeploy"]
+  
+  describe "The autoDeploy parameter must be set to false" do 
+    subject { auto_deploy }
+    it { should_not include "true" } 
+  end 
+
 end
 

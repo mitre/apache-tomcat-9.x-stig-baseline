@@ -50,5 +50,12 @@ xargs chgrp tomcat
   tag fix_id: 'F-108091r1_fix'
   tag cci: ['CCI-001813']
   tag nist: ['CM-5 (1)']
-end
 
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_logs_dir = file("#{catalina_base}/logs")
+  describe tomcat_logs_dir do 
+    its('owner') { should cmp 'tomcat' }
+    its('group') { should cmp 'tomcat' }
+  end 
+
+end
