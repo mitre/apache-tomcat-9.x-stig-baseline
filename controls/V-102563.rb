@@ -51,5 +51,13 @@ xargs chmod 750 $CATALINA_BASE/temp
   tag fix_id: 'F-108095r1_fix'
   tag cci: ['CCI-001813']
   tag nist: ['CM-5 (1)']
-end
 
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_temp_dir = file("#{catalina_base}/temp").mode 
+
+  describe "$CATALINA_BASE/temp directory permissions must be set to 750" do 
+    subject { tomcat_temp_dir }
+    it { should cmp 750 }
+  end
+
+end

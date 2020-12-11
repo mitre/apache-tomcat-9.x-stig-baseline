@@ -64,5 +64,11 @@ address range.
   tag fix_id: 'F-108053r1_fix'
   tag cci: ['CCI-001082']
   tag nist: ['SC-2']
+
+  describe "Compare the IP address associated with the JMX process with the network information in the SSP." do
+    skip "Review the System Security Plan. Ensure the IP address space is dedicated for system management purposes. If the IP address that is associated with the JMX process 
+    is not dedicated to system management usage, this is a finding."
+  end
+
 end
 

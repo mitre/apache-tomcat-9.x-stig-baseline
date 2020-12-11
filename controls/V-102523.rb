@@ -74,5 +74,11 @@ the Tomcat website for specific details and additional configuration options.
   tag fix_id: 'F-108055r1_fix'
   tag cci: ['CCI-001082']
   tag nist: ['SC-2']
+
+  describe "Review system documentation (SSP) for the dedicated management network" do
+    skip "locate the settings for the Remote Address Valve located at $CATALINA_HOME/webapps/manager/META-INF/context.xml. 
+    If the management network is not restricted to localhost or the management network. This is finding."
+  end
+
 end
 

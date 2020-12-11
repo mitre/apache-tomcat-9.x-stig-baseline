@@ -50,5 +50,21 @@ RECYCLE_FACADES=true'
   tag fix_id: 'F-108061r2_fix'
   tag cci: ['CCI-001664']
   tag nist: ['SC-23 (3)']
+
+  tomcat_service_file = '/etc/systemd/system/tomcat.service'
+  environment = command("grep RECYCLE_FACADES #{tomcat_service_file}")
+  catalina_options = environment.stdout.split(" ")
+  recycle_facades = Array.new 
+
+  catalina_options.each do |option|
+    if option.include? "RECYCLE_FACADES"
+      recycle_facades.concat(option.split("=")[1])
+    end
+  end
+  
+  describe "The RECYCLE_FACADES setting must be set to true" do 
+    it { should include "true" }
+  end
+
 end
 

@@ -48,5 +48,30 @@ configuration files and restart the Tomcat server:
   tag fix_id: 'F-108017r1_fix'
   tag cci: ['CCI-000381']
   tag nist: ['CM-7 a']
-end
 
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  allow_trace = tomcat_server_file["//Connector/@allowTrace"]
+
+  apps = command("ls #{catalina_base}/webapps/").stdout.split
+  ignore = ['docs', 'examples', 'host-manager', 'manager', 'ROOT']
+
+  ignore.each do |x|
+    if apps.include?(x)
+      apps.delete(x)
+    end
+  end
+
+  if !apps.empty? 
+    apps.each do |app|
+      app_web = xml("#{catalina_base}/webapps/#{app}/WEBINF/web.xml")
+      allow_trace.concat(app_web["//Connector/@allowTrace"])
+    end
+  end
+
+  describe "if stack tracing is defined in any Connector containers it should be set to false" do 
+    subject { allow_trace }
+    it { should_not include "true" }
+  end
+
+end

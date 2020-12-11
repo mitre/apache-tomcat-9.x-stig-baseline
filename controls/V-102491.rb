@@ -42,5 +42,40 @@ does not = \"false\", this is a finding.
   tag fix_id: 'F-108025r1_fix'
   tag cci: ['CCI-000381']
   tag nist: ['CM-7 a']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_web_file = xml("#{catalina_base}/conf/web.xml") 
+  servlets = tomcat_web_file["//servlet/servlet-name"]
+  check_params = tomcat_web_file["//servlet/init-param/param-name"]
+  index = 0
+  param_index = 0 
+
+  servlets.each do |servlet|
+      for i in 1..servlets.count
+          if servlet == "default"
+              index+=1
+              break
+          end
+      end
+  end
+
+  params = tomcat_web_file["//servlet[#{index}]/init-param/param-name"]
+
+  params.each do |param|
+      for i in 1..params.count
+          if param == "listings"
+              index+=1
+              break
+          end
+      end
+  end
+
+  listings = tomcat_web_file["//servlet[#{index}]/init-param[#{param_index}]/param-value"]
+
+  describe "The listings param for the DefaultServlet element must be set to false" do 
+    subject { listings } 
+    it { should cmp "false" }
+  end
+
 end
 

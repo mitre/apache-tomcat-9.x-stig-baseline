@@ -70,5 +70,11 @@ internalProxies=\"172.16.0.10|172.16.0.11\" />
   tag fix_id: 'F-107997r1_fix'
   tag cci: ['CCI-000169']
   tag nist: ['AU-12 a']
+
+  describe "This is a manual check" do 
+    skip "Check the SSP to determine if the server resides behind a proxy server or load balancer. If true then 
+    requestAttributesEnabled must set to true"
+  end
+
 end
 

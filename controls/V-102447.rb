@@ -21,7 +21,7 @@ true, this is a finding.
     EXAMPLE:
     <session-config>
        <session-timeout>15</session-timeout>
-         $cookie-config
+         <cookie-config>
            <http-only>true</http-only>
             <secure>true</secure>
          </cookie-config>
@@ -38,7 +38,7 @@ the <secure> setting and set to true.
     EXAMPLE:
     <session-config>
        <session-timeout>15</session-timeout>
-         $cookie-config
+         <cookie-config>
            <http-only>true</http-only>
             <secure>true</secure>
          </cookie-config>
@@ -53,5 +53,19 @@ the <secure> setting and set to true.
   tag fix_id: 'F-107987r1_fix'
   tag cci: ['CCI-000213']
   tag nist: ['AC-3']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_web_file = xml("#{catalina_base}/conf/web.xml") 
+
+  describe "The cookie-config element must be defined in web.xml" do 
+    subject { tomcat_web_file["//cookie-config"].empty? }
+    it { should cmp false }
+  end
+
+  describe "The secure parameter inside cookie-config element must be set to true" do 
+    subject { tomcat_web_file["//cookie-config/secure"] }
+    it { should cmp "true" }
+  end
+  
 end
 

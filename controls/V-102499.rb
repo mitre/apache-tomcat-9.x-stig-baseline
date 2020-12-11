@@ -27,5 +27,11 @@ These files must be deleted."
   tag fix_id: 'F-108033r1_fix'
   tag cci: ['CCI-000381']
   tag nist: ['CM-7 a']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  describe file("#{catalina_base}/webapps/examples") do
+    its('exist?') { should cmp false }
+  end
+
 end
 

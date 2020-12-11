@@ -57,5 +57,21 @@ xargs chmod 640 $CATALINA_BASE/conf/*
   tag fix_id: 'F-108011r1_fix'
   tag cci: ['CCI-000163', 'CCI-001813']
   tag nist: ['AU-9', 'CM-5 (1)']
+
+  permissions = Array.new 
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_conf_files = command("ls #{catalina_base}/conf").stdout.split
+
+  tomcat_conf_files.each do |log|
+    permissions.push(file("#{catalina_base}/conf/#{log}").mode)
+  end
+
+  modes = permissions.reject {|mode| mode != 640 }
+
+  describe "Files in the $CATALINA_BASE/conf/ directory must have their permissions set to 640" do 
+    subject { tomcat_conf_files.count }
+    it { should cmp modes.count }
+  end
+
 end
 

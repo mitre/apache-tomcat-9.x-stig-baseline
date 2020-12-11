@@ -92,5 +92,12 @@ message corruption will occur.
   tag fix_id: 'F-108063r1_fix'
   tag cci: ['CCI-001190']
   tag nist: ['SC-24']
-end
 
+  describe "Review System Security Plan (SSP) documentation determine if the Tomcat server is part of an application server cluster." do 
+    skip "If the server is part of a cluster identify Tomcat network interfaces and the proxy/load balancer that 
+    front-ends the cluster. If the Tomcat server is clustered and the EncryptionInterceptor is not in
+    use or if the cluster traffic is not on a private network or VLAN, this is a
+    finding."
+  end
+
+end

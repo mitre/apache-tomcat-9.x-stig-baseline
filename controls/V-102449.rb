@@ -53,5 +53,19 @@ the <http-only> setting and set to true.
   tag fix_id: 'F-107989r1_fix'
   tag cci: ['CCI-000213']
   tag nist: ['AC-3']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_web_file = xml("#{catalina_base}/conf/web.xml") 
+
+  describe "The cookie-config element must be defined in web.xml" do 
+    subject { tomcat_web_file["//cookie-config"].empty? }
+    it { should cmp false }
+  end
+
+  describe "The secure parameter inside cookie-config element must be set to true" do 
+    subject { tomcat_web_file["//cookie-config/http-only"] }
+    it { should cmp "true" }
+  end
+
 end
 

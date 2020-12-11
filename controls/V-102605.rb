@@ -15,10 +15,7 @@ process runs with a umask of 007 to maintain these permissions.
 access to change the Tomcat configuration outweighs the risk of limiting that
 access, then they can change the group membership to accommodate. Ownership
 must not be changed. The ISSM should take the exposure of the system to high
-risk networks into account.
-
-
-  "
+risk networks into account."
   desc  'rationale', ''
   desc  'check', "
     Access the Tomcat server from the command line and execute the following OS
@@ -55,5 +52,13 @@ xargs chmod 750 $CATALINA_BASE/conf
   tag fix_id: 'F-108137r3_fix'
   tag cci: ['CCI-000163', 'CCI-001813']
   tag nist: ['AU-9', 'CM-5 (1)']
-end
 
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_conf_dir = file("#{catalina_base}/conf").mode 
+
+  describe "$CATALINA_BASE/conf directory permissions must be set to 750" do 
+    subject { tomcat_conf_dir }
+    it { should cmp 750 }
+  end
+
+end

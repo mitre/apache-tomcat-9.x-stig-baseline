@@ -44,5 +44,21 @@ org.apache.catalina.connector.response.ENFORCE_ENCODING_IN_GET_WRITER=true
   tag fix_id: 'F-108125r1_fix'
   tag cci: ['CCI-000366']
   tag nist: ['CM-6 b']
-end
 
+  tomcat_service_file = "/etc/systemd/system/tomcat.service"
+  environment = command("grep ENFORCE_ENCODING_IN_GET_WRITER #{tomcat_service_file}")
+  catalina_options = environment.stdout.split(" ")
+  enforce_encoding = Array.new 
+
+  catalina_options.each do |option|
+    if option.include? "ENFORCE_ENCODING_IN_GET_WRITER"
+      enforce_encoding.concat(option.split("=")[1])
+    end
+  end
+  
+  describe "The ENFORCE_ENCODING_IN_GET_WRITER setting must be set to true" do 
+    subject { enforce_encoding }
+    it { should include "true" }
+  end
+
+end

@@ -43,5 +43,39 @@ not = 0, this is a finding.
   tag fix_id: 'F-108023r1_fix'
   tag cci: ['CCI-000381']
   tag nist: ['CM-7 a']
-end
 
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_web_file = xml("#{catalina_base}/conf/web.xml") 
+  servlets = tomcat_web_file["//servlet/servlet-name"]
+  check_params = tomcat_web_file["//servlet/init-param/param-name"]
+  index = 0
+  param_index = 0 
+
+  servlets.each do |servlet|
+      for i in 1..servlets.count
+          if servlet == "default"
+              index+=1
+              break
+          end
+      end
+  end
+
+  params = tomcat_web_file["//servlet[#{index}]/init-param/param-name"]
+
+  params.each do |param|
+      for i in 1..params.count
+          if param == "debug"
+              index+=1
+              break
+          end
+      end
+  end
+
+  debug = tomcat_web_file["//servlet[#{index}]/init-param[#{param_index}]/param-value"]
+
+  describe "The debug param for the DefaultServlet element must be set to 0" do 
+    subject { debug } 
+    it { should cmp 0 }
+  end
+
+end

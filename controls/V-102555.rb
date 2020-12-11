@@ -37,5 +37,13 @@ chgrp tomcat
   tag fix_id: 'F-108087r1_fix'
   tag cci: ['CCI-001813']
   tag nist: ['CM-5 (1)']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_dir = file(catalina_base)
+  describe tomcat_dir do 
+    its('owner') { should cmp 'root' }
+    its('group') { should cmp 'tomcat' }
+  end 
+
 end
 

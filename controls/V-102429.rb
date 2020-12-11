@@ -50,5 +50,17 @@ Tomcat:
   tag fix_id: 'F-107971r5_fix'
   tag cci: ['CCI-000068']
   tag nist: ['AC-17 (2)']
-end
 
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  ciphers = tomcat_server_file["//Connector/@ciphers"]
+ 
+  only_if('No ciphers were found in server.xml. Skipping this check') do 
+    tomcat_server_file["//Connector/@ciphers"]
+  end
+
+  describe "Examine the list of ciphers found in server.xml for the use of any unsecure ciphers according to NIST SP 800-52 section 3.3.1.1" do 
+    skip "If there are any unsecure ciphers below this check has failed: \n#{ciphers.join(',')}"
+  end
+
+end

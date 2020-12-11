@@ -50,7 +50,7 @@ containing an AccessLogValve.
     <Valve className=\"org.apache.catalina.valves.AccessLogValve\"
 directory=\"logs\"
                    prefix=\"localhost_access_log\" suffix=\".txt\"
-                   pattern=\"%h %l %t %u &quot;%r&quot; %s %b\" />
+                   pattern=\"%h %l %t %u \"%r\" %s %b\" />
       ...
     </Host>
 
@@ -69,5 +69,16 @@ directory=\"logs\"
   tag fix_id: 'F-108109r1_fix'
   tag cci: ['CCI-000172', 'CCI-001814']
   tag nist: ['AU-12 c', 'CM-5 (1)']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+
+  access_log_valves = tomcat_server_file["//Engine/Valve/@className"].reject {|name| !name.include? "org.apache.catalina.valves.AccessLogValve" }
+  
+  describe 'At least one Valve element of class AccessLogValve must be a nested component in the <Engine> container' do 
+    subject { access_log_valves } 
+    it {should include "org.apache.catalina.valves.AccessLogValve" }
+  end
+
 end
 

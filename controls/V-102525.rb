@@ -65,5 +65,10 @@ with the connector and edit the associated web.xml files.  Assure the
   tag fix_id: 'F-108057r1_fix'
   tag cci: ['CCI-001184']
   tag nist: ['SC-23']
+
+  describe "Identify each Tomcat IP address that is served by a load balancer or proxy" do 
+    skip "Review each Connector element in the server.xml file for the address setting and the clientAuth setting.
+    If a connector has a configured IP address that is proxied or load balanced and the clientAuth setting is not \"true\", this is a finding."
+  end
 end
 

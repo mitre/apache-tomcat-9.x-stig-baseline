@@ -49,5 +49,10 @@ default server application.
   tag fix_id: 'F-108035r2_fix'
   tag cci: ['CCI-000381']
   tag nist: ['CM-7 a']
+
+  describe "Review the contents inside ROOT directory" do 
+    skip "The ROOT directory contains default info check the index.jsp and RELEASE-NOTES.txt file for appropriate information that will be shown to users."
+  end
+
 end
 

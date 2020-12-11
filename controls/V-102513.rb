@@ -67,5 +67,38 @@ settings on a case by case basis as per your individual LDAP server and schema.
   tag fix_id: 'F-108047r1_fix'
   tag cci: ['CCI-000197']
   tag nist: ['IA-5 (1) (c)']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  realms = tomcat_server_file["//Realm/@className"]
+  index = 0
+
+  describe "LDAP authentication must be performed on the server. Check the Realm element for JNDIRealm configuration." do 
+    subject { realms }
+    it {should include "org.apache.catalina.realm.JNDIRealm" }
+  end
+
+  if realms.include? "org.apache.catalina.realm.JNDIRealm"
+    for i in 0..realms.count
+      if realms[i] == "org.apache.catalina.realm.JNDIRealm"
+        break
+      else
+        index+=1
+      end
+    end
+  end
+
+  ldaps = Array.new 
+  connection_url = tomcat_server_file["//Realm[#{index}]/@connectionURL"]
+  
+  if !connection_url.empty?
+    ldaps.push(connection_url[0].strip.split(":")[0])
+  end
+
+  describe "The connectionURL element of the JDNDIRealm must use ldaps for encyption" do 
+    subject { ldaps }
+    it { should include "ldaps" }
+  end
+
 end
 

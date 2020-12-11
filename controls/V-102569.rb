@@ -8,10 +8,7 @@ when accessing a management interface. DoD has specified that the CAC will be
 used when authenticating and passwords will only be used when CAC
 authentication is not a plausible solution. Tomcat provides the ability to do
 certificate based authentication and client authentication; therefore, the
-Tomcat server must be configured to use CAC.
-
-
-  "
+Tomcat server must be configured to use CAC."
   desc  'rationale', ''
   desc  'check', "
     If the manager application has been deleted from the Tomcat server, this is
@@ -54,5 +51,16 @@ and the manager application roles must be configured in the LDAP server.
   tag fix_id: 'F-108101r1_fix'
   tag cci: ['CCI-001953', 'CCI-001954', 'CCI-002009', 'CCI-002010']
   tag nist: ['IA-2 (12)', 'IA-2 (12)', 'IA-8 (1)', 'IA-8 (1)']
-end
 
+  tomcat_manager_web_file = "/usr/local/tomcat/webapps/manager/WEB-INF/web.xml"
+ 
+  only_if('Manager application is not installed. Skipping this check.') do 
+    file(tomcat_manager_web_file).exist?
+  end
+
+  describe "The authentication method for the 'auth-method' element must be set to 'CLIENT-CERT'" do 
+    subject { xml(tomcat_manager_web_file)["//auth-method"] }
+    it { should cmp "CLIENT-CERT" }  
+  end
+  
+end

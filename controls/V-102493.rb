@@ -57,5 +57,14 @@ auto deployment and document the authorization in the system security plan.
   tag fix_id: 'F-108027r1_fix'
   tag cci: ['CCI-000381']
   tag nist: ['CM-7 a']
-end
 
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  deploy_xml = tomcat_server_file["//Host/@deployXML"]
+  
+  describe "The deployXML attribute must be set to false in hosted environments" do 
+    subject { deploy_xml }
+    it { should_not include "true" } 
+  end 
+  
+end

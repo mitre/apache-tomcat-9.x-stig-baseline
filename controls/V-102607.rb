@@ -47,5 +47,13 @@ xargs chmod 750 $CATALINA_HOME/bin
   tag fix_id: 'F-108139r2_fix'
   tag cci: ['CCI-001493', 'CCI-001494', 'CCI-001495', 'CCI-002235']
   tag nist: ['AU-9', 'AU-9', 'AU-9', 'AC-6 (10)']
-end
 
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_bin_dir = file("#{catalina_base}/bin").mode 
+
+  describe "$CATALINA_BASE/bin directory permissions must be set to 750" do 
+    subject { tomcat_bin_dir }
+    it { should cmp 750 }
+  end
+
+end

@@ -53,5 +53,15 @@ failureCount=\"5\" lockOutTime=\"600\">
   tag fix_id: 'F-108077r1_fix'
   tag cci: ['CCI-002322']
   tag nist: ['AC-17 (9)']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  failure_count = tomcat_server_file["//Realm/@failureCount"]
+
+  describe "The maxiumum number of failed login attempts for the LockoutRealm configuration must be set to 5" do 
+    subject { failure_count }
+    it { should cmp "5" } 
+  end
+  
 end
 

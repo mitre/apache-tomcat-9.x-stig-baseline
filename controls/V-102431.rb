@@ -46,5 +46,19 @@ filter section using the following code:
   tag fix_id: 'F-107973r3_fix'
   tag cci: ['CCI-001453']
   tag nist: ['AC-17 (2)']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_web_file = xml("#{catalina_base}/conf/web.xml")
+
+  describe "The httpHeaderSecurity filter must be defined" do
+    subject { tomcat_web_file["//filter-name"] }
+    it { should include "httpHeaderSecurity" }
+  end
+
+  describe "The hstsEnabled param must be set to true for the httpHeaderSecurity filter" do
+    subject { tomcat_web_file["//hstsEnableds"] }
+    it { should cmp "true" }
+  end
+
 end
 

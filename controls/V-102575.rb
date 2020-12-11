@@ -42,5 +42,15 @@ builds are installed once tested and verified.
   tag fix_id: 'F-108107r1_fix'
   tag cci: ['CCI-002385', 'CCI-002605']
   tag nist: ['SC-5', 'SI-2 c']
+
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  server_version = command("#{catalina_base}/bin/version.sh | grep -i 'Server version' ").stdout.strip
+  built_date = command("#{catalina_base}/bin/version.sh | grep -i 'Server built' ").stdout.strip
+  
+  describe "The Tomcat administrator must ensure the system remains up to date on patches" do 
+    skip "The version and date of the this server is:\n#{server_version}\n#{built_date}\nCompare the version running on the system to the latest secure version of Tomcat. If the latest secure version of Tomcat 
+    is not installed, this is a finding"
+  end
+
 end
 

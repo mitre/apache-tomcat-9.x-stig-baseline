@@ -54,5 +54,31 @@ $Host element.
   tag fix_id: 'F-108065r1_fix'
   tag cci: ['CCI-001312']
   tag nist: ['SI-11 a']
-end
 
+  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  valves = tomcat_server_file["//Valve/@className"]
+  index = 0
+  
+  describe "The ErrorReportValve must be defined in server.xml" do 
+    subject { valves }
+    it { should include "org.apache.catalina.valves.ErrorReportValve" }
+  end
+
+  valves.each do |valve|
+    for i in 1..valves.count 
+      if valve == "org.apache.catalina.valves.ErrorReportValve"
+        index+=1
+        break 
+      end
+    end
+  end
+
+  show_server_info = tomcat_server_file["//Valve[#{index}]/@showServerInfo"]
+  
+  describe "The showServerInfo attribute for the ErrorReportValve must be false" do 
+    subject { show_server_info }
+    it { should cmp "false" }
+  end
+  
+end
