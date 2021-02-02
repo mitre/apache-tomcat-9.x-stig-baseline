@@ -22,7 +22,7 @@ While the Apache Tomcat STIG automation profile check was developed to provide t
 ### Update History 
 | Guidance Name  | Guidance Version | Guidance Location                            | Profile Version | Profile Release Date | STIG EOL    | Profile EOL |
 |---------------------------------------|------------------|--------------------------------------------|-----------------|----------------------|-------------|-------------|
-| Apache Tomcat 9.x STIG  | Ver 2, Rel 2    | https://public.cyber.mil/stigs/downloads/  |  1.0.0         |  28 Jan 2021     | NA | NA |
+| Apache Tomcat 9.x STIG  | Ver 2, Rel 1    | https://public.cyber.mil/stigs/downloads/  |           |       | NA | NA |
 
 
 
