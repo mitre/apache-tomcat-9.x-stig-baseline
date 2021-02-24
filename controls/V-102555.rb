@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102555' do
   title '$CATALINA_HOME folder must be owned by the root user, group tomcat.'
   desc  "Tomcat file permissions must be restricted. The standard configuration
@@ -44,6 +42,4 @@ chgrp tomcat
     its('owner') { should cmp 'root' }
     its('group') { should cmp 'tomcat' }
   end
-
 end
-

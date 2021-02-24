@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102499' do
   title 'Example applications must be removed.'
   desc  "Tomcat provides example applications, documentation, and other
@@ -13,7 +11,7 @@ These files must be deleted."
 
     If the examples folder exists or contains any content, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server OS type the following command:
 
      sudo rm -rf $CATALINA_BASE/webapps/examples
@@ -32,5 +30,4 @@ These files must be deleted."
   describe file("#{catalina_base}/webapps/examples") do
     it { should_not exist }
   end
-
 end

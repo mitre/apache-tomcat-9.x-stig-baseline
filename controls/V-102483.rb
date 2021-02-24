@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102483' do
   title 'Stack tracing must be disabled.'
   desc  "Stack tracing provides debugging information from the application call
@@ -30,7 +28,7 @@ connector
 NAME>/WEBINF/web.xml files contains the \"allow Trace = true\" statement, this
 is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server as a privileged user, edit the xml files containing
 the \"allow Trace=true\" statement.
 
@@ -51,20 +49,19 @@ configuration files and restart the Tomcat server:
 
   catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  allow_trace = tomcat_server_file["//Connector/@allowTrace"]
+  allow_trace = tomcat_server_file['//Connector/@allowTrace']
 
   apps = command("ls #{catalina_base}/webapps/").stdout.split
 
-  if !apps.empty?
+  unless apps.empty?
     apps.each do |app|
       app_web = xml("#{catalina_base}/webapps/#{app}/WEB-INF/web.xml")
-      allow_trace.concat(app_web["//Connector/@allowTrace"])
+      allow_trace.concat(app_web['//Connector/@allowTrace'])
     end
   end
 
-  describe "if stack tracing is defined in any Connector containers it should be set to false" do
+  describe 'if stack tracing is defined in any Connector containers it should be set to false' do
     subject { allow_trace }
-    it { should_not include "true" }
+    it { should_not include 'true' }
   end
-
 end

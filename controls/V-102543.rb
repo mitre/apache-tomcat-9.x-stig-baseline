@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102543' do
   title 'LockOutRealms must be used for management of Tomcat.'
   desc  "A LockOutRealm adds the ability to lock a user out after multiple
@@ -26,7 +24,7 @@ automatically.
     If there are no results or if the LockOutRealm is not used for the Tomcat
 management application context, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server console as a privileged user edit the
 $CATALINA_BASE/conf/server.xml file.
 
@@ -57,12 +55,10 @@ failureCount=\"5\" lockOutTime=\"600\">
 
   catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  realms = tomcat_server_file["//Realm/@className"]
+  realms = tomcat_server_file['//Realm/@className']
 
-  describe "The LockOutRealm must be defined" do
+  describe 'The LockOutRealm must be defined' do
     subject { realms }
-    it { should include "org.apache.catalina.realm.LockOutRealm" }
+    it { should include 'org.apache.catalina.realm.LockOutRealm' }
   end
-
 end
-

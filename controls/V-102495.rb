@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102495' do
   title 'Autodeploy must be disabled.'
   desc  "Tomcat allows auto-deployment of applications while Tomcat is running.
@@ -30,7 +28,7 @@ autoDeploy=\"false\">
 
     If autoDeploy =\"true\", this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server as a privileged user, edit the
 $CATALINA_BASE/conf/server.xml file.
 
@@ -52,12 +50,10 @@ autoDeploy=\"true\", modify the statement to read \", autoDeploy=\"false\".
 
   catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  auto_deploy = tomcat_server_file["//Host/@autoDeploy"]
+  auto_deploy = tomcat_server_file['//Host/@autoDeploy']
 
-  describe "The autoDeploy parameter must be set to false" do
+  describe 'The autoDeploy parameter must be set to false' do
     subject { auto_deploy }
-    it { should_not include "true" }
+    it { should_not include 'true' }
   end
-
 end
-

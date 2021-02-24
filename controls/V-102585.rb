@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102585' do
   title "Application servers must use NIST-approved or NSA-approved key
 management technology and processes."
@@ -33,7 +31,7 @@ and truststore file.
     If there are no CA certificates issued by a Certificate Authority (CA) that
 is part of the DoD PKI/PKE, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     Obtain and install the DoD PKI CA certificate bundles by accessing the DoD
 PKI office website at cyber.mil/pki-pke.
 
@@ -56,5 +54,4 @@ PKI office website at cyber.mil/pki-pke.
     command: \"keytool -list -cacerts -v | grep -i issuer\" to set the Default Location. If the default is already set then run the
     command: \"keytool -list -keystore <location of trust store file> -v |grep -i issuer\" to set the alternate location"
   end
-
 end

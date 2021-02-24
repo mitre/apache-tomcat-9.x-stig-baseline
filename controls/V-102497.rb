@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102497' do
   title 'xpoweredBy attribute must be disabled.'
   desc  "Individual connectors can be configured to display the Tomcat server
@@ -15,7 +13,7 @@ they do not pass Tomcat server info to clients."
 
     If any connector elements contain xpoweredBy=\"true\", this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server as a privileged user, edit the
 $CATALINA_BASE/conf/server.xml file.
 
@@ -37,12 +35,10 @@ xpoweredBy=\"true\", modify the statement to read \", xpoweredBy=\"false\".
 
   catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  x_powered_by = tomcat_server_file["//Connector/@xpoweredBy"]
+  x_powered_by = tomcat_server_file['//Connector/@xpoweredBy']
 
-  describe "The xpoweredBy parameter must be set to false" do
+  describe 'The xpoweredBy parameter must be set to false' do
     subject { x_powered_by }
-    it { should_not include "true" }
+    it { should_not include 'true' }
   end
-
 end
-

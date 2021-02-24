@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102517' do
   title 'Keystore file must be protected.'
   desc  "Keystore file contains authentication information used to access
@@ -54,11 +52,10 @@ a finding.
 
   catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  keystore_files = tomcat_server_file["//Connector/@keystoreFile"]
-
+  keystore_files = tomcat_server_file['//Connector/@keystoreFile']
 
   if file(keystore_files[0]).exist?
-    keystore_dir = keystore_files[0].split('/').slice(0,3).join('/')
+    keystore_dir = keystore_files[0].split('/').slice(0, 3).join('/')
     describe keystore_dir do
       it { should cmp catalina_base }
     end
@@ -73,9 +70,8 @@ a finding.
       end
     end
   else
-    describe "Unable to locate the keystore file" do
-      skip "Unable to find the location of the keystore file used for the Connector element"
+    describe 'Unable to locate the keystore file' do
+      skip 'Unable to find the location of the keystore file used for the Connector element'
     end
   end
-
 end

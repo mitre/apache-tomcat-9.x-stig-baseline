@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102469' do
   title '$CATALINA_BASE/logs folder permissions must be set to 750.'
   desc  "Tomcat file permissions must be restricted. The standard configuration
@@ -27,7 +25,7 @@ in accordance with the risk acceptance.
     If results indicate the $CATALINA_BASE/logs folder permissions are not set
 to 750, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     If operational/application requirements specify different file permissions,
 obtain ISSM risk acceptance and set permissions according to risk acceptance.
 
@@ -49,10 +47,8 @@ xargs chmod 750 $CATALINA_BASE/logs
   catalina_base = input('catalina_base')
   tomcat_log_dir = file("#{catalina_base}/logs").mode
 
-  describe "$CATALINA_BASE/logs directory permissions must be set to 750" do
+  describe '$CATALINA_BASE/logs directory permissions must be set to 750' do
     subject { tomcat_log_dir }
     it { should cmp '0750' }
   end
-
 end
-

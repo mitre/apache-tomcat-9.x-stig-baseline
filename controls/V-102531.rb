@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102531' do
   title 'Clusters must operate on a trusted network.'
   desc  "Operating a Tomcat cluster on an untrusted network creates potential
@@ -40,7 +38,7 @@ returned, this requirement is NA.
 use or if the cluster traffic is not on a private network or VLAN, this is a
 finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     Update the System Security Plan (SSP) and document the network interface,
 their related IP addresses, and which interfaces transport Tomcat cluster
 traffic. Also document which interface is multi-cast enabled if using the
@@ -107,7 +105,8 @@ message corruption will occur.
       tomcat_server_file = xml(tomcat_server_file_location)
 
       describe 'The EncryptInterceptor element needs to be defined' do
-        its(["//Interceptor/@className"]) { should include "org.apache.catalina.tribes.group.interceptors.EncryptInterceptor" }
+        subject { tomcat_server_file }
+        its(['//Interceptor/@className']) { should include 'org.apache.catalina.tribes.group.interceptors.EncryptInterceptor' }
       end
     else
       describe file(tomcat_server_file_location) do
@@ -115,5 +114,4 @@ message corruption will occur.
       end
     end
   end
-
 end

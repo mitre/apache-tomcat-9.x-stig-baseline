@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102493' do
   title 'The deployXML attribute must be set to false in hosted environments.'
   desc  "The Host element controls deployment. Automatic deployment allows for
@@ -32,7 +30,7 @@ deployXML, this is not a finding.
     If the deployXML setting is configured as true and there is no documented
 authorization to allow automatic deployment of applications, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     Document authorization for application auto deployment in the System
 Security Plan (SSP).
 
@@ -60,11 +58,10 @@ auto deployment and document the authorization in the system security plan.
 
   catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  deploy_xml = tomcat_server_file["//Host/@deployXML"]
+  deploy_xml = tomcat_server_file['//Host/@deployXML']
 
-  describe "The deployXML attribute must be set to false in hosted environments" do
+  describe 'The deployXML attribute must be set to false in hosted environments' do
     subject { deploy_xml }
-    it { should_not include "true" }
+    it { should_not include 'true' }
   end
-
 end

@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102433' do
   title "TLS 1.2 must be used on secured HTTP connectors.\n"
   desc  "Using older versions of TLS introduces security vulnerabilities that
@@ -31,7 +29,7 @@ steps needed to create a TLS protected connector.
     If the SSLEnabledProtocols setting is not set to TLSv1.2 or greater, this
 is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     As a privileged user on the Tomcat server, edit the
 $CATALINA_BASE/conf/server.xml and modify the <Connector/> element.
 
@@ -46,26 +44,26 @@ Tomcat:
   impact 0.5
   tag severity: 'medium'
   tag gtitle: 'SRG-APP-000015-AS-000010'
-  tag satisfies: ['SRG-APP-000015-AS-000010', 'SRG-APP-000172-AS-000120',
-'SRG-APP-000439-AS-000155']
+  tag satisfies: %w(SRG-APP-000015-AS-000010 SRG-APP-000172-AS-000120
+SRG-APP-000439-AS-000155)
   tag gid: 'V-102433'
   tag rid: 'SV-111547r1_rule'
   tag stig_id: 'TCAT-AS-000040'
   tag fix_id: 'F-107975r4_fix'
-  tag cci: ['CCI-000197', 'CCI-001453', 'CCI-002418']
+  tag cci: %w(CCI-000197 CCI-001453 CCI-002418)
   tag nist: ['IA-5 (1) (c)', 'AC-17 (2)', 'SC-8']
 
   catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
 
-  if tomcat_server_file["//Connector"].empty?
+  if tomcat_server_file['//Connector'].empty?
     impact 0.0
     describe "No Connector elements were found in #{tomcat_server_file}" do
-      skip "Test Skipped"
+      skip 'Test Skipped'
     end
   else
     ssp_ssl_enabled_protocols = input('ssl_enabled_protocols')
-    connector_count = tomcat_server_file["//Connector"].count
+    connector_count = tomcat_server_file['//Connector'].count
 
     (1..connector_count).each do |i|
       describe tomcat_server_file do
@@ -73,5 +71,4 @@ Tomcat:
       end
     end
   end
-
 end

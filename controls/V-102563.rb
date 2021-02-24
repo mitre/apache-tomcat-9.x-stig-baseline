@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102563' do
   title '$CATALINA_BASE/temp folder permissions must be set to 750.'
   desc  "Tomcat's file permissions must be restricted. The standard
@@ -33,7 +31,7 @@ in accordance with the risk acceptance.
     If results indicate the $CATALINA_BASE/temp folder permissions are not set
 to 750, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     If operational/application requirements specify different file permissions,
 obtain ISSM risk acceptance and set permissions according to risk acceptance.
 
@@ -55,9 +53,8 @@ xargs chmod 750 $CATALINA_BASE/temp
   catalina_base = input('catalina_base')
   tomcat_temp_dir = file("#{catalina_base}/temp").mode
 
-  describe "$CATALINA_BASE/temp directory permissions must be set to 750" do
+  describe '$CATALINA_BASE/temp directory permissions must be set to 750' do
     subject { tomcat_temp_dir }
     it { should cmp 750 }
   end
-
 end

@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102453' do
   title 'Connectors must be secured.'
   desc  "The unencrypted HTTP protocol does not protect data from interception
@@ -20,7 +18,7 @@ scheme= flag is set to \"https\" on each connector.
     If the secure flag is not set to \"true\" and/or the scheme flag is not set
 to \"https\" for each HTTP connector element, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server as a privileged user, edit the server.xml file.
 
     sudo nano $CATALINA_BASE/conf/server.xml.
@@ -57,19 +55,18 @@ protocol=\"org.apache.coyote.http11.Http11NioProtocol\" SSLEnabled=\"true\"
   catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
 
-  if tomcat_server_file["//Connector"].empty?
+  if tomcat_server_file['//Connector'].empty?
     impact 0.0
     describe "No Connector elements were found in #{tomcat_server_file}" do
-      skip "Test Skipped"
+      skip 'Test Skipped'
     end
   else
-    connectors_count = tomcat_server_file["//Connector/"].count
-    (1..connectors_count).each do |i|
+    connectors_count = tomcat_server_file['//Connector/'].count
+    (1..connectors_count).each do |_i|
       describe tomcat_server_file do
-        its(["//Connector/@secure"]) { should include true }
-        its(["//Connector/@scheme"]) { should include 'https' }
+        its(['//Connector/@secure']) { should include true }
+        its(['//Connector/@scheme']) { should include 'https' }
       end
     end
   end
-
 end

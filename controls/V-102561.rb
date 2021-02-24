@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102561' do
   title "$CATALINA_BASE/temp/ folder must be owned by tomcat user, group
 tomcat."
@@ -35,7 +33,7 @@ in accordance with the risk acceptance.
     If results indicate the $CATALINA_BASE/temp folder ownership and group
 membership is not set to tomcat:tomcat, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     If operational/application requirements specify different file permissions,
 obtain ISSM risk acceptance and set permissions according to risk acceptance.
 
@@ -63,6 +61,4 @@ xargs chgrp tomcat
     its('owner') { should cmp 'tomcat' }
     its('group') { should cmp 'tomcat' }
   end
-
 end
-

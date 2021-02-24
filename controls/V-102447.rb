@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102447' do
   title 'Cookies must have secure flag set.'
   desc  "It is possible to steal or manipulate web application session and
@@ -27,7 +25,7 @@ true, this is a finding.
          </cookie-config>
     </session-config>
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server console as a privileged user:
 
     edit the $CATALINA_BASE/conf/web.xml
@@ -57,15 +55,13 @@ the <secure> setting and set to true.
   catalina_base = input('catalina_base')
   tomcat_web_file = xml("#{catalina_base}/conf/web.xml")
 
-  describe "The cookie-config element must be defined in web.xml" do
-    subject { tomcat_web_file["//cookie-config"].empty? }
+  describe 'The cookie-config element must be defined in web.xml' do
+    subject { tomcat_web_file['//cookie-config'].empty? }
     it { should cmp false }
   end
 
-  describe "The secure parameter inside cookie-config element must be set to true" do
-    subject { tomcat_web_file["//cookie-config/secure"] }
-    it { should cmp "true" }
+  describe 'The secure parameter inside cookie-config element must be set to true' do
+    subject { tomcat_web_file['//cookie-config/secure'] }
+    it { should cmp 'true' }
   end
-
 end
-

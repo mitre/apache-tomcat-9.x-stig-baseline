@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102557' do
   title '$CATALINA_BASE/conf/ folder must be owned by root,  group tomcat.'
   desc  "Tomcat file permissions must be restricted. The standard configuration
@@ -38,7 +36,7 @@ are set in accordance with the risk acceptance. Ownership must not be changed.
     If results indicate the $CATALINA_BASE/conf folder ownership and group
 membership is not set to root:tomcat, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     If operational/application requirements specify different group file
 permissions, obtain ISSM risk acceptance and set permissions according to risk
 acceptance.  Ownership must not be changed.

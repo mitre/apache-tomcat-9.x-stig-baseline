@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102501' do
   title 'Tomcat default ROOT web application must be removed.'
   desc  "The default ROOT web application includes the version of Tomcat that
@@ -29,7 +27,7 @@ the ROOT folder is provided with the Apache Tomcat server.
     If the ROOT web application contains Tomcat default application content,
 this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     WARNING: Removing the ROOT folder without replacing the content with valid
 web based content will result in an error page being displayed to the browser
 when the browser lands on the default page.
@@ -50,9 +48,7 @@ default server application.
   tag cci: ['CCI-000381']
   tag nist: ['CM-7 a']
 
-  describe "Review the contents inside ROOT directory" do
-    skip "The ROOT directory contains default info check the index.jsp and RELEASE-NOTES.txt file for appropriate information that will be shown to users."
+  describe 'Review the contents inside ROOT directory' do
+    skip 'The ROOT directory contains default info check the index.jsp and RELEASE-NOTES.txt file for appropriate information that will be shown to users.'
   end
-
 end
-

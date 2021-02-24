@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102621' do
   title "The application server must alert the SA and ISSO, at a minimum, in
 the event of a log processing failure.
@@ -32,7 +30,7 @@ uses email but other  alert methods are acceptable.
     If the OS is not configured to alert the ISSO and SA in the event of an
 audit processing failure, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     Procedures for meeting this requirement will vary according to the OS. For
 Ubuntu Linux systems, instructions for notifying via email are provided. Other
 alert methods are also acceptable but are not provided here.
@@ -64,7 +62,7 @@ administrators are notified via email for those situations:
       skip 'The virtualization system used to validate content is Docker. The auditctl program is not installed in containers, therefore this check will be skipped.'
     end
   else
-    describe auditd_conf  do
+    describe auditd_conf do
       its('action_mail_acct') { should cmp 'root' }
     end
   end

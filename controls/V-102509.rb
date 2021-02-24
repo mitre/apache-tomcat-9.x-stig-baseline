@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102509' do
   title 'JMX authentication must be secured.'
   desc  "Java Management Extensions (JMX) provides the means to remotely manage
@@ -18,7 +16,7 @@ enable authentication."
 
     -Dcom.sun.management.jmxremote.authenticate=false, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     If using JMX for management of the Tomcat server, start the Tomcat server
 by adding the following command line flags to the systemd startup scripts in
 /etc/systemd/system/tomcat.service.
@@ -40,15 +38,14 @@ by adding the following command line flags to the systemd startup scripts in
   tag cci: ['CCI-000765']
   tag nist: ['IA-2 (1)']
 
-  describe "The systemd startup file must exist" do
+  describe 'The systemd startup file must exist' do
     subject { service('tomcat') }
     it { should be_installed }
   end
 
-  if !service('tomcat').params.empty?
+  unless service('tomcat').params.empty?
     describe service('tomcat').params['Environment'] do
       it { should_not match '-Dcom.sun.management.jmxremote.authenticate=false' }
     end
   end
-
 end

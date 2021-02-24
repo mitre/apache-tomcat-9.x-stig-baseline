@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102523' do
   title 'Access to Tomcat manager application must be restricted.'
   desc  "The Tomcat manager application is used to manage the Tomcat server and
@@ -38,7 +36,7 @@ restrict access to localhost or the management network, this is a finding.
     <Valve className=\"org.apache.catalina.valves.RemoteCIDRValve\"
     allow=\"127.0.0.1, ::1\",192.168.1.0/24/>
   "
-  desc  'fix', "
+  desc 'fix', "
     Update system documentation (SSP) and identify the documented management
 networks as well as the documented client networks.
 
@@ -79,13 +77,13 @@ the Tomcat website for specific details and additional configuration options.
     impact 0.0
     desc 'caveat', 'The maanger application is not installed. This is not a finding.'
 
-    describe "Manager application is not installed" do
-      skip "Manager application is not installed. This is not a finding"
+    describe 'Manager application is not installed' do
+      skip 'Manager application is not installed. This is not a finding'
     end
   else
     catalina_base = input('catalina_base')
     tomcat_context_file = xml("#{catalina_base}/webapps/manager/META-INF/context.xml")
-    valves = tomcat_context_file["//Valve/@className"]
+    valves = tomcat_context_file['//Valve/@className']
 
     describe.one do
       describe 'The RemoteAddrValve must be defined' do
@@ -98,5 +96,4 @@ the Tomcat website for specific details and additional configuration options.
       end
     end
   end
-
 end

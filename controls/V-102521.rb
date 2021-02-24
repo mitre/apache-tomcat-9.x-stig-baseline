@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102521' do
   title 'Access to JMX management interface must be restricted.'
   desc  "Java Management Extensions (JMX) is used to provide programmatic
@@ -33,7 +31,7 @@ to system management usage, this is a finding.
     If jmxremote is in use but the host IP address is not specified, this is a
 finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     Make an operational determination regarding the use of JMX. If JMX
 management is decided upon, identify the management networks that are used for
 system management. Update the system security plan and network documentation
@@ -79,5 +77,4 @@ address range.
       it { should cmp jmx_param_value }
     end
   end
-
 end

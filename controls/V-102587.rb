@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102587' do
   title 'STRICT_SERVLET_COMPLIANCE must be set to true.'
   desc  "Strict Servlet Compliance forces Tomcat to adhere to standards
@@ -51,7 +49,7 @@ due to this setting, this is not a finding.
     -Dorg.apache.catalina.STRICT_SERVLET_COMPLIANCE is not set to true, this is
 a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server as a privileged user:
 
     Edit the /etc/systemd/system/tomcat.service file and either add or edit the
@@ -77,15 +75,14 @@ org.apache.catalina.STRICT_SERVLET_COMPLIANCE setting.
   tag cci: ['CCI-000366']
   tag nist: ['CM-6 b']
 
-  describe "The systemd startup file must exist" do
+  describe 'The systemd startup file must exist' do
     subject { service('tomcat') }
     it { should be_installed }
   end
 
-  if !service('tomcat').params.empty?
+  unless service('tomcat').params.empty?
     describe service('tomcat').params['Environment'] do
       it { should match '-Dorg.apache.catalina.STRICT_SERVLET_COMPLIANCE=true' }
     end
   end
-
 end

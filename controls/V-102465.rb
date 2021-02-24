@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102465' do
   title 'HTTP status code must be logged.'
   desc  "The access logfile format is defined within a Valve that implements
@@ -30,7 +28,7 @@ directory=\"logs\"
       ...
     </Host>
   "
-  desc  'fix', "
+  desc 'fix', "
     As a privileged user on the Tomcat server:
 
     Edit the $CATALINA_BASE/conf/server.xml file.
@@ -67,13 +65,11 @@ directory=\"logs\"
   catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
 
-  access_log_valves = tomcat_server_file["//Valve/@className"].reject {|name| !name.include? "org.apache.catalina.valves.AccessLogValve" }
-  patterns = tomcat_server_file["//Valve/@pattern"].reject {|pattern| !pattern.include? "%s" }
+  access_log_valves = tomcat_server_file['//Valve/@className'].reject { |name| !name.include? 'org.apache.catalina.valves.AccessLogValve' }
+  patterns = tomcat_server_file['//Valve/@pattern'].reject { |pattern| !pattern.include? '%s' }
 
   describe 'Each Valve element of class AccessLogValve must have the "%s" included in the pattern in order to log the server response code in the log file' do
     subject { access_log_valves.count }
-    it {should cmp patterns.count }
+    it { should cmp patterns.count }
   end
-
 end
-

@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102455' do
   title 'The Java Security Manager must be enabled.'
   desc  "The Java Security Manager (JSM) is what protects the Tomcat server
@@ -65,7 +63,7 @@ Security Manager, the finding can be reduced to a CAT III.
     If the ExecStart parameter does not include the -security flag, this is a
 finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     Refer to the vulnerability discussion of this requirement for additional
 information. Install the application in a test environment and determine the
 application access requirements. Test and document the Java Security Manager
@@ -92,15 +90,14 @@ read:
   tag cci: ['CCI-000213']
   tag nist: ['AC-3']
 
-  describe "The systemd startup file must exist" do
+  describe 'The systemd startup file must exist' do
     subject { service('tomcat') }
     it { should be_installed }
   end
 
-  if !service('tomcat').params.empty?
+  unless service('tomcat').params.empty?
     describe service('tomcat').params do
       its('ExecStart') { should match '-security' }
     end
   end
-
 end

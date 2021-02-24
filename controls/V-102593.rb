@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102593' do
   title 'ENFORCE_ENCODING_IN_GET_WRITER must be set to true.'
   desc  "Some clients try to guess the character encoding of text media when
@@ -17,7 +15,7 @@ enforce_encoding_in_get_writer must be set to true."
 org.apache.catalina.connector.response.ENFORCE_ENCODING_IN_GET_WRITER is not
 =\"true\", this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server as a privileged user:
 
     Edit the /etc/systemd/system/tomcat.service file, and either add or edit
@@ -45,14 +43,14 @@ org.apache.catalina.connector.response.ENFORCE_ENCODING_IN_GET_WRITER=true
   tag cci: ['CCI-000366']
   tag nist: ['CM-6 b']
 
-  describe "The systemd startup file must exist" do
+  describe 'The systemd startup file must exist' do
     subject { service('tomcat') }
     it { should be_installed }
   end
 
-  if !service('tomcat').params.empty?
+  unless service('tomcat').params.empty?
     describe service('tomcat').params['Environment'] do
-      it { should match '-Dorg.apache.catalina.connector.response.ENFORCE_ENCODING_IN_GET_WRITER=true'}
+      it { should match '-Dorg.apache.catalina.connector.response.ENFORCE_ENCODING_IN_GET_WRITER=true' }
     end
   end
 end

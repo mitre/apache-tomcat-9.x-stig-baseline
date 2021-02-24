@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102503' do
   title 'Documentation must be removed.'
   desc  "Tomcat provides documentation and other directories in the default
@@ -12,7 +10,7 @@ installation which do not serve a production use. These files must be deleted."
 
     If the docs folder exists or contains any content, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server OS type the following command:
 
     sudo rm -rf $CATALINA_BASE/webapps/docs
@@ -31,5 +29,4 @@ installation which do not serve a production use. These files must be deleted."
   describe file("#{catalina_base}/webapps/docs") do
     it { should_not exist }
   end
-
 end

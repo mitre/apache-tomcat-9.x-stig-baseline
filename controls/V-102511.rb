@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102511' do
   title 'TLS must be enabled on JMX.'
   desc  "Java Management Extensions (JMX) provides the means for enterprises to
@@ -36,7 +34,7 @@ a finding.
     -Dcom.sun.management.jmxremote.authenticate=false
     -Dcom.sun.management.jmxremote.ssl=false
   "
-  desc  'fix', "
+  desc 'fix', "
     If using JMX for management of the Tomcat server, start the Tomcat server
 by adding the following command line flags to the systemd startup scripts in
 /etc/systemd/system/tomcat.service.
@@ -58,15 +56,14 @@ by adding the following command line flags to the systemd startup scripts in
   tag cci: ['CCI-000770']
   tag nist: ['IA-2 (5)']
 
-  describe "The systemd startup file must exist" do
+  describe 'The systemd startup file must exist' do
     subject { service('tomcat') }
     it { should be_installed }
   end
 
-  if !service('tomcat').params.empty?
+  unless service('tomcat').params.empty?
     describe service('tomcat').params['Environment'] do
       it { should_not match '-Dcom.sun.management.jmxremote.ssl=false' }
     end
   end
-
 end

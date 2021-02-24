@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102597' do
   title 'Hosted applications must be documented in the system security plan.'
   desc  "The ISSM/ISSO must be cognizant of all applications operating on the
@@ -21,7 +19,7 @@ patched or monitored for unapproved activity on the system.
     If the applications that are hosted on the Tomcat server are not documented
 in the SSP, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     Document the applications that have an ATO on the Tomcat server.
 
     Retain the information in the SSP and present to the auditor in the event
@@ -41,9 +39,8 @@ of a CCRI.
   authorized_web_apps = input('authorized_web_apps')
   server_webapps = command("ls #{catalina_base}/webapps").stdout.split("\n")
 
-  describe "The list of applications hosted on the server must be the same list documented in the SSP" do
+  describe 'The list of applications hosted on the server must be the same list documented in the SSP' do
     subject { server_webapps - authorized_web_apps }
     it { should be_empty }
   end
-
 end
