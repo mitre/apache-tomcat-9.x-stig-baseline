@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102591' do
   title 'ALLOW_BACKSLASH must be set to false.'
   desc  "When Tomcat is installed behind a proxy configured to only allow
@@ -26,7 +24,7 @@ this requirement is NA.
 
     If org.apache.catalina.connector. ALLOW_BACKSLASH=true, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     As a privileged user on the Tomcat server:
 
     If the finding is in the catalina.properties file, edit the
@@ -60,12 +58,12 @@ the file using a text editor.
   tag nist: ['CM-6 b']
 
   catalina_base = input('catalina_base')
-  describe "The systemd startup file must exist" do
+  describe 'The systemd startup file must exist' do
     subject { service('tomcat') }
     it { should be_installed }
   end
 
-  if !service('tomcat').params.empty?
+  unless service('tomcat').params.empty?
     describe service('tomcat').params['Environment'] do
       it { should_not match '-D.org.apache.catalina.connector.ALLOW_BACKSLASH=true' }
     end
@@ -73,7 +71,6 @@ the file using a text editor.
 
   describe "#{catalina_base}/conf/catalina.properties config" do
     subject { parse_config_file("#{catalina_base}/conf/catalina.properties").params }
-    its(["org.apache.catalina.connector.ALLOW_BACKSLASH"]) { should_not cmp 'true' }
+    its(['org.apache.catalina.connector.ALLOW_BACKSLASH']) { should_not cmp 'true' }
   end
-
 end

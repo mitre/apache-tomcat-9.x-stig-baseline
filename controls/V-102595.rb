@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102595' do
   title 'Tomcat users in a management role must be approved by the ISSO.'
   desc  "Deploying applications to Tomcat requires a Tomcat user account that
@@ -16,7 +14,7 @@ ISSO.
     If the ISSO has not approved of documented roles and users who have
 management rights to the Tomcat server, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     Document the users and the roles that have been defined for use with the
 Tomcat server.
 
@@ -38,5 +36,4 @@ and capabilities are approved by the ISSO.
     skip "If the ISSO has not approved of documented roles and users who have
     management rights to the Tomcat server, this is a finding"
   end
-
 end

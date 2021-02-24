@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102429' do
   title "Secured connectors must be configured to use strong encryption ciphers.\n"
   desc  "The Tomcat $Connector element controls the TLS protocol and the
@@ -29,7 +27,7 @@ of the ciphers are not secure.
 
     If insecure ciphers are configured for use, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     As a privileged user on the Tomcat server, edit the
 $CATALINA_BASE/conf/server.xml and modify the <Connector/> element.
 
@@ -55,7 +53,7 @@ Tomcat:
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
 
   ssp_ssl_enabled_protocols = input('ssl_enabled_protocols')
-  connector_count = tomcat_server_file["//Connector"].count
+  connector_count = tomcat_server_file['//Connector'].count
 
   (1..connector_count).each do |i|
     describe tomcat_server_file do
@@ -63,11 +61,10 @@ Tomcat:
     end
   end
 
-  if tomcat_server_file["//Connector"].empty?
+  if tomcat_server_file['//Connector'].empty?
     impact 0.0
     describe "No Connector elements were found in #{tomcat_server_file}" do
-      skip "Test Skipped"
+      skip 'Test Skipped'
     end
   end
-
 end

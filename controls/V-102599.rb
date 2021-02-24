@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102599' do
   title 'Connectors must be approved by the ISSO.'
   desc  "Connectors are how Tomcat receives requests over a network port,
@@ -25,7 +23,7 @@ Connectors documented and approved in the SSP.
     If the Connectors that are configured on the Tomcat server are not approved
 by the ISSO and documented in the SSP, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     Document and obtain ISSO approval for the Connectors that are configured on
 the Tomcat server.
 
@@ -47,8 +45,6 @@ of a CCRI.
   authorized_connector_ports = input('authorized_connector_ports')
 
   describe tomcat_server_file do
-    its(["//Connector/@port"]) { should be_in authorized_connector_ports }
+    its(['//Connector/@port']) { should be_in authorized_connector_ports }
   end
-
 end
-

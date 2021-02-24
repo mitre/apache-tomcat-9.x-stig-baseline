@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102537' do
   title 'ErrorReportValve showReport must be set to false.'
   desc  "The Error Report Valve is a simple error handler for HTTP status codes
@@ -25,7 +23,7 @@ showReport=\"false\"/>
       ...
     </Host>
   "
-  desc  'fix', "
+  desc 'fix', "
     As a privileged user on the Tomcat server:
 
     Edit the $CATALINA_BASE/conf/server.xml file.
@@ -58,17 +56,16 @@ $Host element.
 
   catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  valves = tomcat_server_file["//Valve/@className"]
-  index = 0
+  valves = tomcat_server_file['//Valve/@className']
 
-  describe "The ErrorReportValve must be defined in server.xml" do
+  describe 'The ErrorReportValve must be defined in server.xml' do
     subject { valves }
-    it { should include "org.apache.catalina.valves.ErrorReportValve" }
+    it { should include 'org.apache.catalina.valves.ErrorReportValve' }
   end
 
   error_report_valve = valves.index('org.apache.catalina.valves.ErrorReportValve')
   if error_report_valve.nil?
-    describe "The Valve element ErrorReportValve must be set" do
+    describe 'The Valve element ErrorReportValve must be set' do
       subject { error_report_valve }
       it { should_not be_nil }
     end
@@ -76,10 +73,9 @@ $Host element.
     index = valves.index('org.apache.catalina.valves.ErrorReportValve') + 1
     show_report = tomcat_server_file["//Valve[#{index}]/@showReport"]
 
-    describe "The showReport attribute for the ErrorReportValve must be false" do
+    describe 'The showReport attribute for the ErrorReportValve must be false' do
       subject { show_report }
-      it { should cmp "false" }
+      it { should cmp 'false' }
     end
   end
-
 end

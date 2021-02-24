@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102457' do
   title 'Tomcat servers behind a proxy or load balancer must log client IP.'
   desc  "When running Tomcat behind a load balancer or proxy, default behavior
@@ -31,7 +29,7 @@ configured as \"True\", this is a finding.
     If the requestAttributesEnabled setting is not configured as \"True\", this
 is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server as a privileged user:
 
     Edit the $CATALINA_BASE/conf/server.xml file.
@@ -71,17 +69,17 @@ internalProxies=\"172.16.0.10|172.16.0.11\" />
   tag cci: ['CCI-000169']
   tag nist: ['AU-12 a']
 
-  if !input('behind_a_loadbalancer')
+  unless input('behind_a_loadbalancer')
     impact 0.0
     desc 'caveat', 'The Tomcat server is not behind a proxy server or load balancer, this requirement is NA'
   end
 
   catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  valves = tomcat_server_file["//Valve/@className"]
+  valves = tomcat_server_file['//Valve/@className']
 
   if valves.index('org.apache.catalina.valves.RemoteIpValve').nil?
-    describe "The RemoteIpValve valve is not defined" do
+    describe 'The RemoteIpValve valve is not defined' do
       subject { valves.index('org.apache.catalina.valves.RemoteIpValve') }
       it { should_not be_nil }
     end
@@ -93,16 +91,15 @@ internalProxies=\"172.16.0.10|172.16.0.11\" />
     access_log_valve = tomcat_server_file["//Valve[#{access_log_valve_index}]/@requestAttributesEnabled"]
 
     describe.one do
-      describe "The Remote IP Valve Component for the proxy must be defined" do
+      describe 'The Remote IP Valve Component for the proxy must be defined' do
         subject { remote_ip_valve }
         it { should_not be_empty }
       end
 
-      describe "The Access Log Valve component must have the requestAttributesEnabled field set to true" do
+      describe 'The Access Log Valve component must have the requestAttributesEnabled field set to true' do
         subject { access_log_valve }
         it { should cmp true }
       end
     end
   end
-
 end

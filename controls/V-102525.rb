@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102525' do
   title "Tomcat servers must mutually authenticate proxy or load balancer
 connections."
@@ -45,7 +43,7 @@ address setting and the clientAuth setting.
     If a connector has a configured IP address that is proxied or load balanced
 and the clientAuth setting is not \"true\", this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server as a privileged user, edit the
 $CATALINA_BASE/conf/server.xml file.
 
@@ -80,24 +78,23 @@ with the connector and edit the associated web.xml files.  Assure the
   else
     catalina_base = input('catalina_base')
     tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-    connector_count = tomcat_server_file["//Connector/"].count
+    connector_count = tomcat_server_file['//Connector/'].count
 
     (1..connector_count).each do |i|
       conn = tomcat_server_file["//Connector[#{i}]/@address"]
       if !conn.empty?
-        if conn[0] != "127.0.0.1" || conn[0] != "::1"
-          describe "The clientAuth element must be set to true" do
+        if conn[0] != '127.0.0.1' || conn[0] != '::1'
+          describe 'The clientAuth element must be set to true' do
             subject { tomcat_server_file["//Connector[#{i}]/@clientAuth"] }
-            it { should cmp "true" }
+            it { should cmp 'true' }
           end
         end
       else
-        describe "Unable to find address field on Connector element" do
+        describe 'Unable to find address field on Connector element' do
           subject { conn }
           it { should_not be_empty }
         end
       end
     end
   end
-
 end

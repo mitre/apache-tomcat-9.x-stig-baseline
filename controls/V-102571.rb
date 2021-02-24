@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102571' do
   title "Certificates in the trust store must be issued/signed by an approved
 CA."
@@ -34,7 +32,7 @@ and truststore file.
     If there are no CA certificates issued by a Certificate Authority (CA) that
 is part of the DoD PKI/PKE, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     Obtain and install the DoD PKI CA certificate bundles by accessing the DoD
 PKI office website at https://cyber.mil/pki-pke.
 
@@ -52,8 +50,7 @@ trust store.
   tag cci: ['CCI-002470']
   tag nist: ['SC-23 (5)']
 
-  describe "locate the keystore file and audit the issuer section" do
-    skip "If there are no CA certificates issued by a Certificate Authority (CA) that is part of the DoD PKI/PKE, this is a finding"
+  describe 'locate the keystore file and audit the issuer section' do
+    skip 'If there are no CA certificates issued by a Certificate Authority (CA) that is part of the DoD PKI/PKE, this is a finding'
   end
-
 end

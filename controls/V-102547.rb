@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102547' do
   title "LockOutRealms lockOutTime attribute must be set to 600 seconds (10
 minutes) for admin users."
@@ -34,7 +32,7 @@ automatically.
     If there are no results or if the LockOutRealm lockOutTime setting is not
 configured to 600 (10 minutes), this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server console as a privileged user, edit the
 $CATALINA_BASE/conf/server.xml file.
 
@@ -60,11 +58,10 @@ failureCount=\"5\" lockOutTime=\"600\">
 
   catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  lockout_time = tomcat_server_file["//Realm/@lockOutTime"]
+  lockout_time = tomcat_server_file['//Realm/@lockOutTime']
 
-  describe "The lock out time period for the LockoutRealm configuration must be set to 600 seconds" do
+  describe 'The lock out time period for the LockoutRealm configuration must be set to 600 seconds' do
     subject { lockout_time }
-    it { should cmp "600" }
+    it { should cmp '600' }
   end
-
 end

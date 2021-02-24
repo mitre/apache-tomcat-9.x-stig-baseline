@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102541' do
   title 'Idle timeout for management application must be set to 10 minutes.'
   desc  "Tomcat can set idle session timeouts on a per application basis. The
@@ -28,7 +26,7 @@ $CATALINA_BASE/webapps/manager/META-INF/web.xml
     If the session-timeout setting is not configured to be 10 minutes in at
 least one of these files, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     If the manager application has been deleted from the system, this is not a
 finding.
 
@@ -63,7 +61,7 @@ element.
 
   if !input('manager_app_installed')
     impact 0.0
-    desc "caveat", "The manager application is not installed. This is not a finding"
+    desc 'caveat', 'The manager application is not installed. This is not a finding'
 
     describe 'The manager application is not installed' do
       skip 'The manager application is not installed. This is not a finding'
@@ -71,18 +69,17 @@ element.
   else
     catalina_base = input('catalina_base')
     tomcat_web_xmls = ["#{catalina_base}/conf/web.xml", "#{catalina_base}/webapps/manager/META-INF/web.xml"]
-    session_timeouts = Array.new
+    session_timeouts = []
 
     tomcat_web_xmls.each do |web_xml|
       if file(web_xml).exist?
-        session_timeouts.concat(xml(web_xml)["//session-timeout"])
+        session_timeouts.concat(xml(web_xml)['//session-timeout'])
       end
     end
 
-    describe "The session-timeout setting must be set to 10 minutes in either the manager application or overall web.xml file" do
+    describe 'The session-timeout setting must be set to 10 minutes in either the manager application or overall web.xml file' do
       subject { session_timeouts }
       it { should include 10 }
     end
   end
-
 end

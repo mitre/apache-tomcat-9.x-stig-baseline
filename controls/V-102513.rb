@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102513' do
   title 'LDAP authentication must be secured.'
   desc  "JNDIRealm is an implementation of the Tomcat Realm interface. Tomcat
@@ -32,7 +30,7 @@ configure other LDAP-related settings as well.
     ...
     />
   "
-  desc  'fix', "
+  desc 'fix', "
     Identify the server IP that is providing LDAP services and configure the
 Tomcat user roles schema within LDAP. Refer to the manager and host-manager
 web.xml files for application specific role information that can be used for
@@ -70,20 +68,17 @@ settings on a case by case basis as per your individual LDAP server and schema.
 
   catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  realms = tomcat_server_file["//Realm/@className"]
-  index = 0
+  realms = tomcat_server_file['//Realm/@className']
 
-  describe "LDAP authentication must be performed on the server. Check the Realm element for JNDIRealm configuration." do
+  describe 'LDAP authentication must be performed on the server. Check the Realm element for JNDIRealm configuration.' do
     subject { realms }
-    it {should include "org.apache.catalina.realm.JNDIRealm" }
+    it { should include 'org.apache.catalina.realm.JNDIRealm' }
   end
 
-  jndi_realm_count = tomcat_server_file["//Realm[@className='org.apache.catalina.realm.JNDIRealm']"].count
-  compliant_connection_url = tomcat_server_file["//Realm[@className='org.apache.catalina.realm.JNDIRealm']/@connectionURL"].collect{|x| x.match("ldaps") }
+  compliant_connection_url = tomcat_server_file["//Realm[@className='org.apache.catalina.realm.JNDIRealm']/@connectionURL"].collect { |x| x.match('ldaps') }
 
-  describe "The connectionURL element of the JDNDIRealm must use ldaps for encyption" do
+  describe 'The connectionURL element of the JDNDIRealm must use ldaps for encyption' do
     subject { compliant_connection_url }
-    it { should include "ldaps" }
+    it { should include 'ldaps' }
   end
-
 end

@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102589' do
   title 'RECYCLE_FACADES must be set to true.'
   desc  "If RECYCLE_FACADES is true or if a security manager is in use, a new
@@ -25,7 +23,7 @@ chosen.
     If there are no results, or if the org.apache.catalina.connector.
 RECYCLE_FACADES is not =\"true\", this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server as a privileged user:
 
     Edit the /etc/systemd/system/tomcat.service file and either add or edit the
@@ -51,12 +49,12 @@ RECYCLE_FACADES=true'
   tag cci: ['CCI-000366']
   tag nist: ['CM-6 b']
 
-  describe "The systemd startup file must exist" do
+  describe 'The systemd startup file must exist' do
     subject { service('tomcat') }
     it { should be_installed }
   end
 
-  if !service('tomcat').params.empty?
+  unless service('tomcat').params.empty?
     describe service('tomcat').params['Environment'] do
       it { should match '-Dorg.apache.catalina.connector.RECYCLE_FACADES=true' }
     end

@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102545' do
   title "LockOutRealms failureCount attribute must be set to 5 failed logins
 for admin users."
@@ -30,7 +28,7 @@ automatically.
     If there are no results or if the LockOutRealm failureCount setting is not
 configured to 5, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server console as a privileged user edit the
 $CATALINA_BASE/conf/server.xml file.
 
@@ -56,12 +54,10 @@ failureCount=\"5\" lockOutTime=\"600\">
 
   catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  failure_count = tomcat_server_file["//Realm/@failureCount"]
+  failure_count = tomcat_server_file['//Realm/@failureCount']
 
-  describe "The maxiumum number of failed login attempts for the LockoutRealm configuration must be set to 5" do
+  describe 'The maxiumum number of failed login attempts for the LockoutRealm configuration must be set to 5' do
     subject { failure_count }
-    it { should cmp "5" }
+    it { should cmp '5' }
   end
-
 end
-

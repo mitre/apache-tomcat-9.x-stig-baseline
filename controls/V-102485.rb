@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102485' do
   title 'The shutdown port must be disabled.'
   desc  "Tomcat listens on TCP port 8005 to accept shutdown requests. By
@@ -21,7 +19,7 @@ is set to -1.
 
     If Server port not = \"-1\" shutdown=\"SHUTDOWN\", this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server as a privileged user, edit the
 $CATALINA_BASE/conf/server.xml file: set the Server port setting to -1 and
 restart the Tomcat server.
@@ -43,11 +41,9 @@ restart the Tomcat server.
 
   catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  shutdown_port = tomcat_server_file["//Server/@port"]
+  shutdown_port = tomcat_server_file['//Server/@port']
 
   describe shutdown_port do
-      it { should cmp '-1' }
+    it { should cmp '-1' }
   end
-
 end
-

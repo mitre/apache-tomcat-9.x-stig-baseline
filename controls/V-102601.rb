@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102601' do
   title 'Connector address attribute must be set.'
   desc  "Connectors are how Tomcat receives requests over a network port,
@@ -26,7 +24,7 @@ the network interface specified in the SSP.
     If the connector address attribute is not specified as per the SSP, this is
 a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     Ensure the address attribute for each connector and the network interfaces
 are specified in the SSP.
 
@@ -64,7 +62,6 @@ an example using a random IP address:
   authorized_connector_addresses = input('authorized_connector_addresses')
 
   describe tomcat_server_file do
-    its(["//Connector/@address"]) { should be_in authorized_connector_addresses }
+    its(['//Connector/@address']) { should be_in authorized_connector_addresses }
   end
-
 end

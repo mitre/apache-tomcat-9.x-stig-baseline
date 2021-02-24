@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102583' do
   title 'Changes to $CATALINA_HOME/lib/ folder must be logged.'
   desc  "The $CATALINA_HOME/lib folder contains library files for the Tomcat
@@ -25,7 +23,7 @@ attribute and content change events into syslog."
     If the results do not include -w $CATALINA_HOME/lib -p wa -k tomcat, or if
 there are no results, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server as a privileged user, use the auditctl command.
 
     sudo auditctl  -w $CATALINA_HOME/lib -p wa -k tomcat

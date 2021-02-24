@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102535' do
   title 'Default error pages for manager application must be customized.'
   desc  "Default error pages that accompany the manager application provide
@@ -20,7 +18,7 @@ not exist on production systems."
     If the error files contained in this folder are not customized and sample
 information removed, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server as a privileged user:
 
     sudo cd $CATALINA_BASE/webapps/manager/WEB-INF/jsp/
@@ -48,6 +46,4 @@ that assists users but does not provide sample data to users.
     skip "For the $CATALINA_HOME/webapps/manager/WEB-INF/jsp/401.jsp and
     the ..402.jsp and ..403.jsp pages. Remove default and sensitive infomation."
   end
-
 end
-

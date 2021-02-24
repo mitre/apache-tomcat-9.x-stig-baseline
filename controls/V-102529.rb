@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102529' do
   title 'Tomcat must be configured to limit data exposure between applications.'
   desc  "If RECYCLE_FACADES is true or if a security manager is in use, a new
@@ -25,7 +23,7 @@ tomcat.service was chosen.
     If there are no results, or if the org.apache.catalina.connector.
 RECYCLE_FACADES is not =\"true\", this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server as a privileged user:
 
     edit the /etc/systemd/system/tomcat.service file and either add or edit the
@@ -51,15 +49,14 @@ RECYCLE_FACADES=true'
   tag cci: ['CCI-001664']
   tag nist: ['SC-23 (3)']
 
-  describe "The systemd startup file must exist" do
+  describe 'The systemd startup file must exist' do
     subject { service('tomcat') }
     it { should be_installed }
   end
 
-  if !service('tomcat').params.empty?
+  unless service('tomcat').params.empty?
     describe service('tomcat').params['Environment'] do
       it { should match '-Dorg.apache.catalina.connector.RECYCLE_FACADES=true' }
     end
   end
-
 end

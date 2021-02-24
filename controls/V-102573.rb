@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102573' do
   title "The application server, when categorized as a high availability system
 within RMF, must be in a high-availability (HA) cluster."
@@ -37,7 +35,7 @@ privileged user, run the following command:
     If the <Cluster/> element is commented out, or no results returned, then
 the system is not clustered and this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server as a privileged user, modify the
 $CATALINA_BASE/conf/server.xml file.
 
@@ -63,10 +61,9 @@ as per the Tomcat clustering documentation provided at the Tomcat website.
     catalina_base = input('catalina_base')
     tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
 
-    describe "The system should apart of a server cluster" do
-      subject { tomcat_server_file["//Cluster"] }
+    describe 'The system should apart of a server cluster' do
+      subject { tomcat_server_file['//Cluster'] }
       it { should_not be_empty }
     end
   end
-
 end

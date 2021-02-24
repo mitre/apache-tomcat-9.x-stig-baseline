@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102473' do
   title "Files in the $CATALINA_BASE/conf/ folder must have their permissions
 set to 640."
@@ -38,7 +36,7 @@ in accordance with the risk acceptance.
     If results indicate any of the file permissions contained in the
 $CATALINA_BASE/conf folder are not set to 640, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     If operational/application requirements specify different file permissions,
 obtain ISSM risk acceptance and set permissions according to risk acceptance.
 
@@ -50,21 +48,20 @@ xargs chmod 640 $CATALINA_BASE/conf/*
   impact 0.5
   tag severity: 'medium'
   tag gtitle: 'SRG-APP-000119-AS-000079'
-  tag satisfies: ['SRG-APP-000119-AS-000079', 'SRG-APP-000380-AS-000088']
+  tag satisfies: %w(SRG-APP-000119-AS-000079 SRG-APP-000380-AS-000088)
   tag gid: 'V-102473'
   tag rid: 'SV-111419r1_rule'
   tag stig_id: 'TCAT-AS-000370'
   tag fix_id: 'F-108011r1_fix'
-  tag cci: ['CCI-000163', 'CCI-001813']
+  tag cci: %w(CCI-000163 CCI-001813)
   tag nist: ['AU-9', 'CM-5 (1)']
 
   catalina_base = input('catalina_base')
   tomcat_conf_files = command("ls #{catalina_base}/conf").stdout.split
-  non_compliant_files = tomcat_conf_files.select{ |conf| file("#{catalina_base}/conf/#{conf}").more_permissive_than?('0640') }
+  non_compliant_files = tomcat_conf_files.select { |conf| file("#{catalina_base}/conf/#{conf}").more_permissive_than?('0640') }
 
-  describe "Files in the $CATALINA_BASE/conf/ directory must have their permissions set to 640" do
+  describe 'Files in the $CATALINA_BASE/conf/ directory must have their permissions set to 640' do
     subject { non_compliant_files }
     it { should be_empty }
   end
 end
-

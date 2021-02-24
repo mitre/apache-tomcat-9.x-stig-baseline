@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102481' do
   title 'Tomcat user UMASK must be set to 0027.'
   desc  "For Unix-based systems, umask settings affect file creation
@@ -24,7 +22,7 @@ following commands if the system differs:
 
     If the umask is not = 0027, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server as a privileged user:
 
     Use a file editor like nano or vi and edit the
@@ -48,15 +46,14 @@ following commands if the system differs:
   tag cci: ['CCI-001499']
   tag nist: ['CM-5 (6)']
 
-  describe "The systemd startup file must exist" do
+  describe 'The systemd startup file must exist' do
     subject { service('tomcat') }
     it { should be_installed }
   end
 
-  if !service('tomcat').params.empty?
+  unless service('tomcat').params.empty?
     describe service('tomcat').params do
       its('UMask') { should cmp '0027' }
     end
   end
-
 end

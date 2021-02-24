@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102471' do
   title "Files in the $CATALINA_BASE/logs/ folder must have their permissions
 set to 640."
@@ -28,7 +26,7 @@ in accordance with the risk acceptance.
     If results indicate any of the file permissions contained in the
 $CATALINA_BASE/logs folder are not set to 640, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     If operational/application requirements specify different file permissions,
 obtain ISSM risk acceptance and set permissions according to risk acceptance.
 
@@ -49,11 +47,10 @@ xargs chmod 640 $CATALINA_BASE/logs/*
 
   catalina_base = input('catalina_base')
   tomcat_log_files = command("ls #{catalina_base}/logs").stdout.split
-  non_compliant_files = tomcat_log_files.select{ |log| file("#{catalina_base}/logs/#{log}").more_permissive_than?('0640') }
+  non_compliant_files = tomcat_log_files.select { |log| file("#{catalina_base}/logs/#{log}").more_permissive_than?('0640') }
 
-  describe "Files in the $CATALINA_BASE/logs/ directory must have their permissions set to 640" do
+  describe 'Files in the $CATALINA_BASE/logs/ directory must have their permissions set to 640' do
     subject { non_compliant_files }
     it { should be_empty }
   end
-
 end

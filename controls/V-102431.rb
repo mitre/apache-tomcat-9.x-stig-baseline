@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102431' do
   title "HTTP Strict Transport Security (HSTS) must be enabled.\n"
   desc  "HTTP Strict Transport Security (HSTS) instructs web browsers to only
@@ -21,7 +19,7 @@ https://community.microfocus.com/t5/Identity-Manager-Tips/Enabling-HTTP-Strict-T
     If the httpHeaderSecurity filter is commented out or if hstsEnable is not
 set to \"true\", this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server as a privileged user, edit the web.xml file:
 
     sudo nano $CATALINA_BASE/conf/web.xml file.
@@ -51,10 +49,10 @@ filter section using the following code:
   tomcat_web_file = xml("#{catalina_base}/conf/web.xml")
 
   describe tomcat_web_file do
-    its("//filter") { should_not be_empty }
+    its('//filter') { should_not be_empty }
   end
 
-  filter_count = tomcat_web_file["//filter"].count
+  filter_count = tomcat_web_file['//filter'].count
 
   describe.one do
     (1..filter_count).each do |i|
@@ -65,4 +63,3 @@ filter section using the following code:
     end
   end
 end
-

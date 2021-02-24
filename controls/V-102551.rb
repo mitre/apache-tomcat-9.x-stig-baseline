@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102551' do
   title 'Tomcat user account must be a non-privileged user.'
   desc  "Use a distinct non-privileged user account for running Tomcat. If
@@ -23,7 +21,7 @@ process:
     If the user ID field of the passwd file is set to < 1000 or = 0, this is a
 finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server, create a tomcat user by adding a new non-privileged
 user OS account with the following command:
 
@@ -52,9 +50,7 @@ Use the new \"tomcat\" user account by setting; USER=tomcat
   tag cci: ['CCI-002235']
   tag nist: ['AC-6 (10)']
 
-  describe "Determine the OS user ID tied to the Tomcat process" do
-    skip "If the user ID field of the passwd file is set to < 1000 or = 0, this is a finding."
+  describe 'Determine the OS user ID tied to the Tomcat process' do
+    skip 'If the user ID field of the passwd file is set to < 1000 or = 0, this is a finding.'
   end
-
 end
-

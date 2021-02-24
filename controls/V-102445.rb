@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102445' do
   title 'Default password for keystore must be changed.'
   desc  "Tomcat currently operates only on JKS, PKCS11, or PKCS12 format
@@ -24,7 +22,7 @@ keystore:
 
     If the contents of the keystore are displayed, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server as a privileged user, run the following command:
 
     sudo keytool -storepasswd
@@ -38,20 +36,16 @@ accessible to authorized personnel.
   impact 0.7
   tag severity: 'high'
   tag gtitle: 'SRG-APP-000033-AS-000024'
-  tag satisfies: ['SRG-APP-000033-AS-000023', 'SRG-APP-000176-AS-000125']
+  tag satisfies: %w(SRG-APP-000033-AS-000023 SRG-APP-000176-AS-000125)
   tag gid: 'V-102445'
   tag rid: 'SV-111393r1_rule'
   tag stig_id: 'TCAT-AS-000060'
   tag fix_id: 'F-107985r1_fix'
-  tag cci: ['CCI-000186', 'CCI-000213']
+  tag cci: %w(CCI-000186 CCI-000213)
   tag nist: ['IA-5 (2) (b)', 'AC-3']
-
-  keystore_file = input("keystore_file")
 
   describe 'The default password for keystore is "changeit" sans quotes. If the following command: "keytool -list -v -keystore <keystore location>" grants access. This check has failed.' do
     subject { command("keytool -list -v --storepass 'changeit'").exit_status }
     it { should_not eq 0 }
   end
-
 end
-

@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102515' do
   title 'DoD root CA certificates must be installed in Tomcat trust store.'
   desc  "Tomcat truststores are used to validate client certificates.  On the
@@ -42,7 +40,7 @@ and truststore file.
     If there are no CA certificates issued by a Certificate Authority (CA) that
 is part of the DoD PKI/PKE, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     Obtain and install the DoD PKI CA certificate bundles by accessing the DoD
 PKI office website at cyber.mil/pki-pke.
 
@@ -58,11 +56,9 @@ PKI office website at cyber.mil/pki-pke.
   tag cci: ['CCI-000185']
   tag nist: ['IA-5 (2) (a)']
 
-  describe "This is a manual check" do
+  describe 'This is a manual check' do
     skip "Check the truststore settings in the tomcat.service file. If the variable is not set then run the command:
     'keytool -list -cacerts -v | grep -i issuer' if the variable is already set then add an alternate location with the
     command: 'keytool -list -keystore <location of trust store file> -v | grep -i issuer'"
   end
-
 end
-

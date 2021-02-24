@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102605' do
   title '$CATALINA_BASE/conf folder permissions must be set to 750.'
   desc  "Tomcat file permissions must be restricted. The standard configuration
@@ -33,7 +31,7 @@ in accordance with the risk acceptance.
     If results indicate the $CATALINA_BASE/conf folder permissions are not set
 to 750, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     If operational/application requirements specify different file permissions,
 obtain ISSM risk acceptance and set permissions according to risk acceptance.
 
@@ -45,20 +43,19 @@ xargs chmod 750 $CATALINA_BASE/conf
   impact 0.5
   tag severity: 'medium'
   tag gtitle: 'SRG-APP-000119-AS-000079'
-  tag satisfies: ['SRG-APP-000119-AS-000079', 'SRG-APP-000380-AS-000088']
+  tag satisfies: %w(SRG-APP-000119-AS-000079 SRG-APP-000380-AS-000088)
   tag gid: 'V-102605'
   tag rid: 'SV-111551r1_rule'
   tag stig_id: 'TCAT-AS-000371'
   tag fix_id: 'F-108137r3_fix'
-  tag cci: ['CCI-000163', 'CCI-001813']
+  tag cci: %w(CCI-000163 CCI-001813)
   tag nist: ['AU-9', 'CM-5 (1)']
 
   catalina_base = input('catalina_base')
   tomcat_conf_dir = file("#{catalina_base}/conf").mode
 
-  describe "$CATALINA_BASE/conf directory permissions must be set to 750" do
+  describe '$CATALINA_BASE/conf directory permissions must be set to 750' do
     subject { tomcat_conf_dir }
     it { should cmp '0750' }
   end
-
 end

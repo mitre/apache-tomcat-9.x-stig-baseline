@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102607' do
   title '$CATALINA_HOME/bin folder permissions must be set to 750.'
   desc  "Tomcat file permissions must be restricted. The standard configuration
@@ -39,21 +37,20 @@ xargs chmod 750 $CATALINA_HOME/bin
   impact 0.5
   tag severity: 'medium'
   tag gtitle: 'SRG-APP-000121-AS-000081'
-  tag satisfies: ['SRG-APP-000121-AS-000081', 'SRG-APP-000122-AS-000082',
-'SRG-APP-000123-AS-000083', 'SRG-APP-000340-AS-000185']
+  tag satisfies: %w(SRG-APP-000121-AS-000081 SRG-APP-000122-AS-000082
+SRG-APP-000123-AS-000083 SRG-APP-000340-AS-000185)
   tag gid: 'V-102607'
   tag rid: 'SV-111553r1_rule'
   tag stig_id: 'TCAT-AS-000390'
   tag fix_id: 'F-108139r2_fix'
-  tag cci: ['CCI-001493', 'CCI-001494', 'CCI-001495', 'CCI-002235']
+  tag cci: %w(CCI-001493 CCI-001494 CCI-001495 CCI-002235)
   tag nist: ['AU-9', 'AU-9', 'AU-9', 'AC-6 (10)']
 
   catalina_base = input('catalina_base')
   tomcat_bin_dir = file("#{catalina_base}/bin").mode
 
-  describe "$CATALINA_BASE/bin directory permissions must be set to 750" do
+  describe '$CATALINA_BASE/bin directory permissions must be set to 750' do
     subject { tomcat_bin_dir }
     it { should cmp '0750' }
   end
-
 end

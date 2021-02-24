@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102577' do
   title 'AccessLogValve must be configured for Catalina engine.'
   desc  "The $Engine container represents the entire request processing
@@ -35,7 +33,7 @@ element is not defined, this is a finding.
       ...
     </Engine>
   "
-  desc  'fix', "
+  desc 'fix', "
     As a privileged user on the Tomcat server:
 
     Edit the $CATALINA_BASE/conf/server.xml file.
@@ -61,21 +59,20 @@ directory=\"logs\"
   impact 0.5
   tag severity: 'medium'
   tag gtitle: 'SRG-APP-000495-AS-000220'
-  tag satisfies: ['SRG-APP-000495-AS-000220', 'SRG-APP-000381-AS-000089',
-'SRG-APP-000499-AS-000224', 'SRG-APP-000504-AS-000229']
+  tag satisfies: %w(SRG-APP-000495-AS-000220 SRG-APP-000381-AS-000089
+SRG-APP-000499-AS-000224 SRG-APP-000504-AS-000229)
   tag gid: 'V-102577'
   tag rid: 'SV-111517r1_rule'
   tag stig_id: 'TCAT-AS-001560'
   tag fix_id: 'F-108109r1_fix'
-  tag cci: ['CCI-000172', 'CCI-001814']
+  tag cci: %w(CCI-000172 CCI-001814)
   tag nist: ['AU-12 c', 'CM-5 (1)']
 
   catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
 
   describe 'At least one Valve element of class AccessLogValve must be a nested component in the <Engine> container' do
-    subject { tomcat_server_file["//Engine//Valve/@className"] }
-    it {should include "org.apache.catalina.valves.AccessLogValve" }
+    subject { tomcat_server_file['//Engine//Valve/@className'] }
+    it { should include 'org.apache.catalina.valves.AccessLogValve' }
   end
-
 end

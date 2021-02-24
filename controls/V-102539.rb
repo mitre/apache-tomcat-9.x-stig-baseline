@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102539' do
   title 'Tomcat server version must not be sent with warnings and errors.'
   desc  "A first order of attack is to identify vulnerable servers and
@@ -29,7 +27,7 @@ information. Google \"Apache Tomcat 9 changelog\".
     If server.info=\"Apache Tomcat\" or server.number=the valid Tomcat version,
 this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat server, cd to the $CATALINA_HOME/lib folder. As a
 privileged user run the following case sensitive command:
 
@@ -71,5 +69,4 @@ privileged user run the following case sensitive command:
     its('stdout') { should_not match 'Apache Tomcat' }
     its('stdout') { should_not match /9\.[0-9]*\.[0-9]*/ }
   end
-
 end

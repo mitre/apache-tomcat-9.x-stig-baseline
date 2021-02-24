@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102609' do
   title 'Tomcat must use FIPS-validated ciphers on secured connectors.'
   desc  "Connectors are how Tomcat receives requests over a network port,
@@ -28,7 +26,7 @@ Tomcat server is configured to use FIPS:
 contains the error \"failed to set property[FIPSMODE] to [on]\", this is a
 finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     In addition to configuring Tomcat, the admin must also configure the
 underlying OS and Java engine to use FIPS validated encryption modules. This
 fix instructs how to enable FIPSMode within Tomcat, the OS and Java engine must
@@ -56,24 +54,24 @@ modify the FIPSMode setting and set it to FIPSMode=\"on\".
   impact 0.7
   tag severity: 'high'
   tag gtitle: 'SRG-APP-000179-AS-000129'
-  tag satisfies: ['SRG-APP-000224-AS-000152', 'SRG-APP-000428-AS-000265',
-'SRG-APP-000429-AS-000157', 'SRG-APP-000439-AS-000274',
-'SRG-APP-000440-AS-000167']
+  tag satisfies: %w(SRG-APP-000224-AS-000152 SRG-APP-000428-AS-000265
+SRG-APP-000429-AS-000157 SRG-APP-000439-AS-000274
+SRG-APP-000440-AS-000167)
   tag gid: 'V-102609'
   tag rid: 'SV-111567r1_rule'
   tag stig_id: 'TCAT-AS-000750'
   tag fix_id: 'F-108141r7_fix'
-  tag cci: ['CCI-000803', 'CCI-001188', 'CCI-002418', 'CCI-002421',
-'CCI-002475', 'CCI-002476']
+  tag cci: %w(CCI-000803 CCI-001188 CCI-002418 CCI-002421
+CCI-002475 CCI-002476)
   tag nist: ['IA-7', 'SC-23 (3)', 'SC-8', 'SC-8 (1)', 'SC-28 (1)', 'SC-28 (1)']
 
   catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  fipsmode = tomcat_server_file["//Listener/@FIPSMode"]
+  fipsmode = tomcat_server_file['//Listener/@FIPSMode']
 
-  describe "FIPSmode must be defined and set to on" do
+  describe 'FIPSmode must be defined and set to on' do
     subject { fipsmode }
-    it { should cmp "on" }
+    it { should cmp 'on' }
   end
 
   catalina_out_file = file("#{catalina_base}/logs/catalina.out")
@@ -83,5 +81,4 @@ modify the FIPSMode setting and set it to FIPSMode=\"on\".
       its('content') { should_not match 'failed to set property[FIPSMODE] to [on]' }
     end
   end
-
 end

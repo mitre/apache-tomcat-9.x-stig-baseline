@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102477' do
   title "Jar files in the $CATALINA_HOME/bin/ folder must have their
 permissions set to 640."
@@ -44,12 +42,11 @@ sudo xargs chmod 640 $CATALINA_HOME/bin/*jar
 
   catalina_base = input('catalina_base')
   tomcat_bin_files = command("ls #{catalina_base}/bin").stdout.split
-  non_compliant_files = tomcat_bin_files.select{ |bin| file("#{catalina_base}/bin/#{bin}").more_permissive_than?('0640') }
-  jar_files = non_compliant_files.reject {|bin| File.extname(bin) != ".jar"}
+  non_compliant_files = tomcat_bin_files.select { |bin| file("#{catalina_base}/bin/#{bin}").more_permissive_than?('0640') }
+  jar_files = non_compliant_files.reject { |bin| File.extname(bin) != '.jar' }
 
-  describe "Files in the $CATALINA_BASE/bin/ directory must have their permissions set to 640" do
+  describe 'Files in the $CATALINA_BASE/bin/ directory must have their permissions set to 640' do
     subject { jar_files }
     it { should be_empty }
   end
 end
-

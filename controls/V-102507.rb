@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102507' do
   title 'Tomcat management applications must use LDAP realm authentication.'
   desc  "Using the local user store on a Tomcat installation does not meet a
@@ -23,7 +21,7 @@ this is not a finding.
     If the JNDIRealm does not exist or if the JNDIRealm configuration is
 commented out, this is finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     Identify the server IP that is providing LDAP services and configure the
 Tomcat user roles schema within LDAP. Refer to the manager and host-manager
 web.xml files for application specific role information that can be used for
@@ -71,11 +69,11 @@ case-by-case basis as per the individual LDAP server and schema.
     tomcat_server_file_location = "#{catalina_base}/conf/server.xml"
     if file(tomcat_server_file_location).exist?
       tomcat_server_file = xml(tomcat_server_file_location)
-      realms = tomcat_server_file["//Realm/@className"]
+      realms = tomcat_server_file['//Realm/@className']
 
-      describe "LDAP authentication must be performed on the server. Check the Realm element for JNDIRealm configuration." do
+      describe 'LDAP authentication must be performed on the server. Check the Realm element for JNDIRealm configuration.' do
         subject { realms }
-        it {should include "org.apache.catalina.realm.JNDIRealm" }
+        it { should include 'org.apache.catalina.realm.JNDIRealm' }
       end
     else
       describe file(tomcat_server_file_location) do
@@ -83,5 +81,4 @@ case-by-case basis as per the individual LDAP server and schema.
       end
     end
   end
-
 end

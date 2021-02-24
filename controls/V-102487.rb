@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102487' do
   title 'Unapproved connectors must be disabled.'
   desc  "Connectors are how Tomcat receives requests, passes them to hosted web
@@ -20,7 +18,7 @@ are approved in the SSP.
 
     If connectors are found but are not approved in the SSP, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     Obtain ISSO approvals for the configured connectors and document in the SSP.
 
     Alternatively, edit the $CATALINA_BASE/conf/server.xml file, remove any
@@ -38,9 +36,7 @@ unapproved connectors, and restart Tomcat:
   tag cci: ['CCI-000381']
   tag nist: ['CM-7 a']
 
-  describe "Unapproved connectors must be disabled" do
-    skip "Verify all connectors and their associated ports in the $CATALINA_HOME/conf/server.xml are approved in the SSP."
+  describe 'Unapproved connectors must be disabled' do
+    skip 'Verify all connectors and their associated ports in the $CATALINA_HOME/conf/server.xml are approved in the SSP.'
   end
-
 end
-

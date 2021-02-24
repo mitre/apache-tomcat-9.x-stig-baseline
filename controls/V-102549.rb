@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102549' do
   title 'Tomcat user account must be set to nologin.'
   desc  "When installing Tomcat, a user account is created on the OS. This
@@ -17,7 +15,7 @@ parameter in the command/shell field of the passwd file."
     If the command/shell field of the passwd file is not set to
 \"/usr/sbin/nologin\", this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     From the Tomcat command line type the following command:
 
     sudo usermod -s /usr/sbin/nologin tomcat
@@ -33,8 +31,6 @@ parameter in the command/shell field of the passwd file."
   tag nist: ['AC-6 (10)']
 
   describe passwd.users(/tomcat/) do
-    its('shells') { should cmp "/usr/sbin/nologin" }
+    its('shells') { should cmp '/usr/sbin/nologin' }
   end
-
 end
-

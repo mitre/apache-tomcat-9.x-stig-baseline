@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102427' do
   title "The number of allowed simultaneous sessions to the manager application
 must be limited.
@@ -30,7 +28,7 @@ META-INF/context.xml
     If the maxActiveSesions setting is not configured according to the number
 of connections defined in the SSP, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     Determine the number of authorized admins requiring simultaneous access and
 increase the number of allowed simultaneous sessions by a small percentage in
 order to address potential lockout scenarios. Document that value in the System
@@ -61,14 +59,14 @@ defined in the SSP.
 
   if !input('manager_app_installed')
     impact 0.0
-    desc "caveat", "Manager application is not in use or has been deleted from the system, this is not a finding."
+    desc 'caveat', 'Manager application is not in use or has been deleted from the system, this is not a finding.'
 
     describe "#{tomcat_manager_context_file} does not exist" do
       skip "#{tomcat_manager_context_file} does not exist"
     end
   else
     describe xml(tomcat_manager_context_file) do
-      its(["//Manager/@maxActiveSessions"]) { should cmp ssp_max_active_sessions }
+      its(['//Manager/@maxActiveSessions']) { should cmp ssp_max_active_sessions }
     end
   end
 end

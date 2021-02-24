@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 control 'V-102505' do
   title 'Applications in privileged mode must be approved by the ISSO.'
   desc  "The privileged attribute controls if a context (application) is
@@ -38,7 +36,7 @@ name>META-INF/context.xml
 has been approved for privileged mode by the ISSO. If the application is not
 approved to run in privileged mode, this is a finding.
   "
-  desc  'fix', "
+  desc 'fix', "
     On the Tomcat server as a privileged user, modify the relevant context.xml
 file and set the privileged attribute to false (privileged=false).
     A restart should not be required if the context element is not maintained
@@ -61,7 +59,7 @@ in the system security plan (SSP) for CCRI reviews.
 
   catalina_base = input('catalina_base')
   tomcat_context_file = xml("#{catalina_base}/conf/context.xml")
-  privileged = tomcat_context_file["//Context/@privileged"]
+  privileged = tomcat_context_file['//Context/@privileged']
 
   apps = command("ls #{catalina_base}/webapps/").stdout.split
 
@@ -70,11 +68,11 @@ in the system security plan (SSP) for CCRI reviews.
       if file("#{catalina_base}/webapps/#{app}/META-INF/context.xml").exist?
         app_context = xml("#{catalina_base}/webapps/#{app}/META-INF/context.xml")
       end
-      privileged.concat(app_context["//Context/@privileged"])
+      privileged.concat(app_context['//Context/@privileged'])
 
-      describe "The Context container must have privileged attribute set to false" do
+      describe 'The Context container must have privileged attribute set to false' do
         subject { privileged }
-        it { should_not include "true" }
+        it { should_not include 'true' }
       end
     end
   else
@@ -85,5 +83,4 @@ in the system security plan (SSP) for CCRI reviews.
       skip 'There are no applications installed. This check can be skipped'
     end
   end
-
 end
