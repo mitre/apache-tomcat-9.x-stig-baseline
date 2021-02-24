@@ -59,25 +59,21 @@ the file using a text editor.
   tag cci: ['CCI-000366']
   tag nist: ['CM-6 b']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
-  tomcat_service_file = "/etc/systemd/system/tomcat.service"
-  environment = command("grep ALLOW_BACKSLASH #{tomcat_service_file}")
-  catalina_options = environment.stdout.split(" ")
-  allow_backslash = Array.new 
+  catalina_base = input('catalina_base')
+  describe "The systemd startup file must exist" do
+    subject { service('tomcat') }
+    it { should be_installed }
+  end
 
-  catalina_options.each do |option|
-    if option.include? "ALLOW_BACKSLASH"
-      allow_backslash.concat(option.split("=")[1])
+  if !service('tomcat').params.empty?
+    describe service('tomcat').params['Environment'] do
+      it { should_not match '-D.org.apache.catalina.connector.ALLOW_BACKSLASH=true' }
     end
   end
-  
-  describe "The ALLOW_BACKSLASH setting must be set to true" do 
-    subject { allow_backslash }
-    it { should include "true" }
-  end
 
-  describe parse_config_file("#{catalina_base}/conf/catalina.properties") do
-    its('ALLOW_BACKSLASH') { should eq 'false' }
+  describe "#{catalina_base}/conf/catalina.properties config" do
+    subject { parse_config_file("#{catalina_base}/conf/catalina.properties").params }
+    its(["org.apache.catalina.connector.ALLOW_BACKSLASH"]) { should_not cmp 'true' }
   end
 
 end

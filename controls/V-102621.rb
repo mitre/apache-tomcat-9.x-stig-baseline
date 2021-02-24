@@ -59,14 +59,13 @@ administrators are notified via email for those situations:
   tag cci: ['CCI-000139']
   tag nist: ['AU-5 a']
 
-  describe "This requirement cannot be met by the Tomcat server natively and must be
-  done at the OS. Review operating system. Ensure the OS is configured to alert
-  the ISSO and SA in the event of an audit processing failure." do 
-    skip "The alert notification method itself can be accomplished in a variety of
-    ways and is not restricted to email alone. The intention is to send an alert,
-    the method used to send the alert is not a factor of the requirement. If the OS 
-    is not configured to alert the ISSO and SA in the event of an
-    audit processing failure, this is a finding."
+  if virtualization.system.eql?('docker')
+    describe 'Virtualization system used is Docker' do
+      skip 'The virtualization system used to validate content is Docker. The auditctl program is not installed in containers, therefore this check will be skipped.'
+    end
+  else
+    describe auditd_conf  do
+      its('action_mail_acct') { should cmp 'root' }
+    end
   end
 end
-

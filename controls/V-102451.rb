@@ -42,40 +42,30 @@ class = \"true\".
   tag cci: ['CCI-000213']
   tag nist: ['AC-3']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
-  tomcat_web_file = xml("#{catalina_base}/conf/web.xml") 
-  servlets = tomcat_web_file["//servlet/servlet-name"]
+  catalina_base = input('catalina_base')
+  tomcat_web_file = xml("#{catalina_base}/conf/web.xml")
+  servlets = tomcat_web_file["//servlet/servlet-class"]
   check_params = tomcat_web_file["//servlet/init-param/param-name"]
-  index = 0
+  servlet_index = 0
   param_index = 0
 
-  only_if("Run only if DefaultServlet has readonly enabled") do
-      check_params.include?("readonly")
-  end 
+  servlet_index = servlets.index('org.apache.catalina.servlets.DefaultServlet') + 1
+  params = tomcat_web_file["//servlet[#{servlet_index}]/init-param/param-name"]
 
-  servlets.each do |servlet|
-      for i in 1..servlets.count
-          if servlet == "default"
-              index+=1
-              break
-          end
-      end
-  end
-  params = tomcat_web_file["//servlet[#{index}]/init-param/param-name"]
+  if params.index('readonly').nil?
+    describe "The readonly param for DefaultServlet is not defined" do
+      subject { params.index('readonly') }
+      it { should_not be_nil }
+    end
 
-  params.each do |param|
-      for i in 1..params.count
-          if param == "readonly"
-              index+=1
-              break
-          end
-      end
+  else
+    params_index = params.index('readonly') + 1
+    readonly = tomcat_web_file["//servlet[#{servlet_index}]/init-param[#{params_index}]/param-value"]
+
+    describe "The readonly param for the DefaultServlet element must be set to true" do
+      subject { readonly }
+      it { should cmp "true" }
+    end
   end
 
-  readonly = tomcat_web_file["//servlet[#{index}]/init-param[#{param_index}]/param-value"]
-  describe "The readonly param for the DefaultServlet element must be set to true" do 
-    subject { readonly } 
-    it { should cmp "true" }
-  end
- 
 end

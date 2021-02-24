@@ -61,10 +61,10 @@ xargs chgrp tomcat
   tag cci: ['CCI-001813']
   tag nist: ['CM-5 (1)']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  catalina_base = input('catalina_base')
   tomcat_conf_dir = file("#{catalina_base}/conf")
-  describe tomcat_conf_dir do 
+  describe tomcat_conf_dir do
     its('owner') { should cmp 'root' }
     its('group') { should cmp 'tomcat' }
-  end 
+  end
 end

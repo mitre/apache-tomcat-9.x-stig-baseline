@@ -44,38 +44,20 @@ not = 0, this is a finding.
   tag cci: ['CCI-000381']
   tag nist: ['CM-7 a']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
-  tomcat_web_file = xml("#{catalina_base}/conf/web.xml") 
-  servlets = tomcat_web_file["//servlet/servlet-name"]
+  catalina_base = input('catalina_base')
+  tomcat_web_file = xml("#{catalina_base}/conf/web.xml")
+  servlets = tomcat_web_file["//servlet/servlet-class"]
   check_params = tomcat_web_file["//servlet/init-param/param-name"]
-  index = 0
-  param_index = 0 
+  servlet_index = 0
+  param_index = 0
 
-  servlets.each do |servlet|
-      for i in 1..servlets.count
-          if servlet == "default"
-              index+=1
-              break
-          end
-      end
-  end
+  servlet_index = servlets.index('org.apache.catalina.servlets.DefaultServlet') + 1
+  params = tomcat_web_file["//servlet[#{servlet_index}]/init-param/param-name"]
+  param_index = params.index('debug') + 1
+  debug = tomcat_web_file["//servlet[#{servlet_index}]/init-param[#{param_index}]/param-value"]
 
-  params = tomcat_web_file["//servlet[#{index}]/init-param/param-name"]
-
-  params.each do |param|
-      for i in 1..params.count
-          if param == "debug"
-              index+=1
-              break
-          end
-      end
-  end
-
-  debug = tomcat_web_file["//servlet[#{index}]/init-param[#{param_index}]/param-value"]
-
-  describe "The debug param for the DefaultServlet element must be set to 0" do 
-    subject { debug } 
+  describe "The default param for the DefaultServlet element must be set to 0" do
+    subject { debug }
     it { should cmp 0 }
   end
-
 end

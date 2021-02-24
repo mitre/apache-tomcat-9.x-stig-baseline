@@ -59,14 +59,29 @@ case-by-case basis as per the individual LDAP server and schema.
   tag cci: ['CCI-000764']
   tag nist: ['IA-2']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
-  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  realms = tomcat_server_file["//Realm/@className"]
+  if !input('manager_app_installed') && !input('host_manager_app_installed')
+    impact 0.0
+    desc 'caveat', 'Manager and host-manager applications have been deleted from the system, this is not a finding.'
 
-  describe "LDAP authentication must be performed on the server. Check the Realm element for JNDIRealm configuration." do 
-    subject { realms }
-    it {should include "org.apache.catalina.realm.JNDIRealm" }
+    describe 'Manager and host-manager applications are not installed.' do
+      skip 'Manager and host-manager applications are not installed. Skipping this check'
+    end
+  else
+    catalina_base = input('catalina_base')
+    tomcat_server_file_location = "#{catalina_base}/conf/server.xml"
+    if file(tomcat_server_file_location).exist?
+      tomcat_server_file = xml(tomcat_server_file_location)
+      realms = tomcat_server_file["//Realm/@className"]
+
+      describe "LDAP authentication must be performed on the server. Check the Realm element for JNDIRealm configuration." do
+        subject { realms }
+        it {should include "org.apache.catalina.realm.JNDIRealm" }
+      end
+    else
+      describe file(tomcat_server_file_location) do
+        it { should exist }
+      end
+    end
   end
 
 end
-

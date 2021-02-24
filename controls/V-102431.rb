@@ -47,18 +47,22 @@ filter section using the following code:
   tag cci: ['CCI-001453']
   tag nist: ['AC-17 (2)']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  catalina_base = input('catalina_base')
   tomcat_web_file = xml("#{catalina_base}/conf/web.xml")
 
-  describe "The httpHeaderSecurity filter must be defined" do
-    subject { tomcat_web_file["//filter-name"] }
-    it { should include "httpHeaderSecurity" }
+  describe tomcat_web_file do
+    its("//filter") { should_not be_empty }
   end
 
-  describe "The hstsEnabled param must be set to true for the httpHeaderSecurity filter" do
-    subject { tomcat_web_file["//hstsEnableds"] }
-    it { should cmp "true" }
-  end
+  filter_count = tomcat_web_file["//filter"].count
 
+  describe.one do
+    (1..filter_count).each do |i|
+      describe tomcat_web_file do
+        its(["//filter[#{i}]/filter-name"]) { should cmp 'httpHeaderSecurity' }
+        its(["//filter[#{i}]//hstsEnabled"]) { should cmp 'true' }
+      end
+    end
+  end
 end
 

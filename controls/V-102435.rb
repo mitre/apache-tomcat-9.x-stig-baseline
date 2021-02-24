@@ -68,19 +68,21 @@ directory=\"logs\"
 'CCI-000166', 'CCI-000169', 'CCI-000172']
   tag nist: ['AC-17 (1)', 'AU-3', 'AU-3', 'AU-3', 'AU-10', 'AU-12 a', 'AU-12 c']
 
-  
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
-  tomcat_server_file = xml("#{catalina_base}/conf/server.xml") 
-  contexts = tomcat_server_file["//Context"]
-  access_log_valves = tomcat_server_file["//Context/Valve/@className"].reject {|name| !name.include? "org.apache.catalina.valves.AccessLogValve" }
+  catalina_base = input('catalina_base')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  context_count = tomcat_server_file["//Context"].count
 
-  only_if('Context container is not defined in server.xml. Skipping this check.') do 
-    contexts.empty?
+  (1..context_count).each do |i|
+    describe tomcat_server_file do
+      its(["//Context[#{i}]//Valve/@className"]) { should include "org.apache.catalina.valves.AccessLogValve" }
+    end
   end
 
-  describe "Each Context container must have a nested Valve element with the AccessLogValve class name defined" do 
-    subject { contexts.count }
-    it { should eq access_log_valves.count } 
-  end 
+  if tomcat_server_file["//Context"].empty?
+    impact 0.0
+    describe "No Context elements were found in #{tomcat_server_file}" do
+      skip "Test Skipped"
+    end
+  end
 
 end

@@ -59,30 +59,31 @@ in the system security plan (SSP) for CCRI reviews.
   tag cci: ['CCI-000382']
   tag nist: ['CM-7 b']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  catalina_base = input('catalina_base')
   tomcat_context_file = xml("#{catalina_base}/conf/context.xml")
   privileged = tomcat_context_file["//Context/@privileged"]
 
   apps = command("ls #{catalina_base}/webapps/").stdout.split
-  ignore = ['docs', 'examples', 'host-manager', 'manager', 'ROOT']
 
-  ignore.each do |x|
-    if apps.include?(x)
-      apps.delete(x)
-    end
-  end
-
-  if !apps.empty? 
+  if !apps.empty?
     apps.each do |app|
-      app_context = xml("#{catalina_base}/webapps/#{app}/META-INF/context.xml")
+      if file("#{catalina_base}/webapps/#{app}/META-INF/context.xml").exist?
+        app_context = xml("#{catalina_base}/webapps/#{app}/META-INF/context.xml")
+      end
       privileged.concat(app_context["//Context/@privileged"])
-    end
-  end
 
-  describe "The Context container must have privileged attribute set to false" do 
-    subject { privileged }
-    it { should_not include "true" } 
+      describe "The Context container must have privileged attribute set to false" do
+        subject { privileged }
+        it { should_not include "true" }
+      end
+    end
+  else
+    impact 0.0
+    desc 'caveat', 'There are no applications installed.'
+
+    describe 'There are no applications installed.' do
+      skip 'There are no applications installed. This check can be skipped'
+    end
   end
 
 end
-

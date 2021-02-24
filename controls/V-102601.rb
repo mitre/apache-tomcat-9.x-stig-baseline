@@ -59,10 +59,12 @@ an example using a random IP address:
   tag cci: ['CCI-000366']
   tag nist: ['CM-6 b']
 
-  describe "Verify the address attribute is specified for each connector and is set to the network interface specified in the SSP" do 
-    skip "Review SSP documentation for list of approved connectors and associated
-    TCP/IP ports and interfaces. If the connector address attribute is not specified as per the SSP, this is
-    a finding."
-  end 
+  catalina_base = input('catalina_base')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  authorized_connector_addresses = input('authorized_connector_addresses')
+
+  describe tomcat_server_file do
+    its(["//Connector/@address"]) { should be_in authorized_connector_addresses }
+  end
 
 end

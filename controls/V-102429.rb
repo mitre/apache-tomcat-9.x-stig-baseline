@@ -51,16 +51,23 @@ Tomcat:
   tag cci: ['CCI-000068']
   tag nist: ['AC-17 (2)']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  ciphers = tomcat_server_file["//Connector/@ciphers"]
- 
-  only_if('No ciphers were found in server.xml. Skipping this check') do 
-    tomcat_server_file["//Connector/@ciphers"]
+
+  ssp_ssl_enabled_protocols = input('ssl_enabled_protocols')
+  connector_count = tomcat_server_file["//Connector"].count
+
+  (1..connector_count).each do |i|
+    describe tomcat_server_file do
+      its(["//Connector[#{i}]/@SSLEnabledProtocols"]) { should cmp ssp_ssl_enabled_protocols }
+    end
   end
 
-  describe "Examine the list of ciphers found in server.xml for the use of any unsecure ciphers according to NIST SP 800-52 section 3.3.1.1" do 
-    skip "If there are any unsecure ciphers below this check has failed: \n#{ciphers.join(',')}"
+  if tomcat_server_file["//Connector"].empty?
+    impact 0.0
+    describe "No Connector elements were found in #{tomcat_server_file}" do
+      skip "Test Skipped"
+    end
   end
 
 end

@@ -55,18 +55,20 @@ defined in the SSP.
   tag cci: ['CCI-000054']
   tag nist: ['AC-10']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
-
+  catalina_base = input('catalina_base')
   tomcat_manager_context_file = "#{catalina_base}/webapps/manager/META-INF/context.xml"
-  max_active_sessions = xml(tomcat_manager_context_file["//manager/@maxActiveSessions"]) 
+  ssp_max_active_sessions = input('max_active_sessions')
 
-  only_if('Manager application is not installed. Skipping this check.') do 
-    file(tomcat_manager_context_file).exist?
+  if !input('manager_app_installed')
+    impact 0.0
+    desc "caveat", "Manager application is not in use or has been deleted from the system, this is not a finding."
+
+    describe "#{tomcat_manager_context_file} does not exist" do
+      skip "#{tomcat_manager_context_file} does not exist"
+    end
+  else
+    describe xml(tomcat_manager_context_file) do
+      its(["//Manager/@maxActiveSessions"]) { should cmp ssp_max_active_sessions }
+    end
   end
-  
-  describe "Determine the number of authorized admins requiring simultaneous access" do
-    skip "The number of simultaneous access is #{max_active_sessions}. Compare this value with admin access requirements in the Systems Security Plan."
-  end
-  
 end
-

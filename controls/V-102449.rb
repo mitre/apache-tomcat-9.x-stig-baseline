@@ -54,15 +54,15 @@ the <http-only> setting and set to true.
   tag cci: ['CCI-000213']
   tag nist: ['AC-3']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
-  tomcat_web_file = xml("#{catalina_base}/conf/web.xml") 
+  catalina_base = input('catalina_base')
+  tomcat_web_file = xml("#{catalina_base}/conf/web.xml")
 
-  describe "The cookie-config element must be defined in web.xml" do 
+  describe "The cookie-config element must be defined in web.xml" do
     subject { tomcat_web_file["//cookie-config"].empty? }
     it { should cmp false }
   end
 
-  describe "The secure parameter inside cookie-config element must be set to true" do 
+  describe "The secure parameter inside cookie-config element must be set to true" do
     subject { tomcat_web_file["//cookie-config/http-only"] }
     it { should cmp "true" }
   end

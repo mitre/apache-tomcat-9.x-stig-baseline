@@ -52,15 +52,21 @@ and the manager application roles must be configured in the LDAP server.
   tag cci: ['CCI-001953', 'CCI-001954', 'CCI-002009', 'CCI-002010']
   tag nist: ['IA-2 (12)', 'IA-2 (12)', 'IA-8 (1)', 'IA-8 (1)']
 
-  tomcat_manager_web_file = "/usr/local/tomcat/webapps/manager/WEB-INF/web.xml"
- 
-  only_if('Manager application is not installed. Skipping this check.') do 
-    file(tomcat_manager_web_file).exist?
+  if !input('manager_app_installed')
+    impact 0.0
+    desc "caveat", "The manager application is not installed. This is not a finding"
+
+    describe 'The manager application is not installed.' do
+      skip 'The manager application is not installed. This is not a finding'
+    end
+  else
+    catalina_base = input('catalina_base')
+    tomcat_manager_web_file = xml("#{catalina_base}/webapps/manager/WEB-INF/web.xml")
+
+    describe "The authentication method for the 'auth-method' element must be set to 'CLIENT-CERT'" do
+      subject { tomcat_manager_web_file["//auth-method"] }
+      it { should cmp "CLIENT-CERT" }
+    end
   end
 
-  describe "The authentication method for the 'auth-method' element must be set to 'CLIENT-CERT'" do 
-    subject { xml(tomcat_manager_web_file)["//auth-method"] }
-    it { should cmp "CLIENT-CERT" }  
-  end
-  
 end

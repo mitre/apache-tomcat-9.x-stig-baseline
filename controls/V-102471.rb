@@ -47,19 +47,13 @@ xargs chmod 640 $CATALINA_BASE/logs/*
   tag cci: ['CCI-000162']
   tag nist: ['AU-9']
 
-  permissions = Array.new 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  catalina_base = input('catalina_base')
   tomcat_log_files = command("ls #{catalina_base}/logs").stdout.split
+  non_compliant_files = tomcat_log_files.select{ |log| file("#{catalina_base}/logs/#{log}").more_permissive_than?('0640') }
 
-  tomcat_log_files.each do |log|
-    permissions.push(file("#{catalina_base}/logs/#{log}").mode)
-  end
-
-  modes = permissions.reject {|mode| mode != 640 }
-
-  describe "Files in the $CATALINA_BASE/logs/ directory must have their permissions set to 640" do 
-    subject { tomcat_log_files.count }
-    it { should cmp modes.count }
+  describe "Files in the $CATALINA_BASE/logs/ directory must have their permissions set to 640" do
+    subject { non_compliant_files }
+    it { should be_empty }
   end
 
 end

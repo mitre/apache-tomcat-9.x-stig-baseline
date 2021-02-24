@@ -71,10 +71,38 @@ internalProxies=\"172.16.0.10|172.16.0.11\" />
   tag cci: ['CCI-000169']
   tag nist: ['AU-12 a']
 
-  describe "This is a manual check" do 
-    skip "Check the SSP to determine if the server resides behind a proxy server or load balancer. If true then 
-    requestAttributesEnabled must set to true"
+  if !input('behind_a_loadbalancer')
+    impact 0.0
+    desc 'caveat', 'The Tomcat server is not behind a proxy server or load balancer, this requirement is NA'
+  end
+
+  catalina_base = input('catalina_base')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  valves = tomcat_server_file["//Valve/@className"]
+
+  if valves.index('org.apache.catalina.valves.RemoteIpValve').nil?
+    describe "The RemoteIpValve valve is not defined" do
+      subject { valves.index('org.apache.catalina.valves.RemoteIpValve') }
+      it { should_not be_nil }
+    end
+  else
+    remote_ip_valve_index = valves.index('org.apache.catalina.valves.RemoteIpValve')
+    remote_ip_valve = tomcat_server_file["//Valve[#{remote_ip_valve_index}]/@internalProxies"]
+
+    access_log_valve_index = valves.index('org.apache.catalina.valves.AccessLogValve')
+    access_log_valve = tomcat_server_file["//Valve[#{access_log_valve_index}]/@requestAttributesEnabled"]
+
+    describe.one do
+      describe "The Remote IP Valve Component for the proxy must be defined" do
+        subject { remote_ip_valve }
+        it { should_not be_empty }
+      end
+
+      describe "The Access Log Valve component must have the requestAttributesEnabled field set to true" do
+        subject { access_log_valve }
+        it { should cmp true }
+      end
+    end
   end
 
 end
-

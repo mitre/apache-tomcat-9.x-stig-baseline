@@ -46,9 +46,16 @@ there are no results, this is a finding.
   tag cci: ['CCI-000172']
   tag nist: ['AU-12 c']
 
-  describe "Changes to content in $CATALINA_BASE/lib directory must be logged" do 
-    skip "Check the audit rules for the Tomcat folders. If the results do not include 
-    -w $CATALINA_HOME/lib -p wa -k tomcat, or if there are no results, this is a finding."
-  end
+  if virtualization.system.eql?('docker')
+    describe 'Virtualization system used is Docker' do
+      skip 'The virtualization system used to validate content is Docker. The auditctl program is not installed in containers, therefore this check will be skipped.'
+    end
+  else
+    catalina_base = input('catalina_base')
+    desired_result = "-w #{catalina_base}/lib -p wa -k tomcat"
 
+    describe auditd do
+      its('lines') { should include desired_result }
+    end
+  end
 end
