@@ -93,11 +93,27 @@ message corruption will occur.
   tag cci: ['CCI-001190']
   tag nist: ['SC-24']
 
-  describe "Review System Security Plan (SSP) documentation determine if the Tomcat server is part of an application server cluster." do 
-    skip "If the server is part of a cluster identify Tomcat network interfaces and the proxy/load balancer that 
-    front-ends the cluster. If the Tomcat server is clustered and the EncryptionInterceptor is not in
-    use or if the cluster traffic is not on a private network or VLAN, this is a
-    finding."
+  if !input('cluster_server')
+    impact 0.0
+    desc 'caveat', 'The server is not apart of an application server cluster. This is not a finding.'
+
+    describe 'The server is not apart of a cluster' do
+      skip 'The server is not apart of a cluster. This is not a finding'
+    end
+  else
+    catalina_base = input('catalina_base')
+    tomcat_server_file_location = "#{catalina_base}/conf/server.xml"
+    if file(tomcat_server_file_location).exist?
+      tomcat_server_file = xml(tomcat_server_file_location)
+
+      describe 'The EncryptInterceptor element needs to be defined' do
+        its(["//Interceptor/@className"]) { should include "org.apache.catalina.tribes.group.interceptors.EncryptInterceptor" }
+      end
+    else
+      describe file(tomcat_server_file_location) do
+        it { should exist }
+      end
+    end
   end
 
 end

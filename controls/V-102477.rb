@@ -42,20 +42,14 @@ sudo xargs chmod 640 $CATALINA_HOME/bin/*jar
   tag cci: ['CCI-000164']
   tag nist: ['AU-9']
 
-  permissions = Array.new 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  catalina_base = input('catalina_base')
   tomcat_bin_files = command("ls #{catalina_base}/bin").stdout.split
+  non_compliant_files = tomcat_bin_files.select{ |bin| file("#{catalina_base}/bin/#{bin}").more_permissive_than?('0640') }
+  jar_files = non_compliant_files.reject {|bin| File.extname(bin) != ".jar"}
 
-  tomcat_bin_files.each do |b|
-    permissions.push(file("#{catalina_base}/bin/#{b}").mode)
+  describe "Files in the $CATALINA_BASE/bin/ directory must have their permissions set to 640" do
+    subject { jar_files }
+    it { should be_empty }
   end
-
-  modes = permissions.reject {|mode| mode != 640 }
-
-  describe "Files in the $CATALINA_BASE/bin/ directory must have their permissions set to 640" do 
-    subject { tomcat_bin_files.count }
-    it { should cmp modes.count }
-  end
-
 end
 

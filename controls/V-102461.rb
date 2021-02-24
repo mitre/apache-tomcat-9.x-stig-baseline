@@ -63,14 +63,14 @@ directory=\"logs\"
   tag cci: ['CCI-000131']
   tag nist: ['AU-3']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
 
   access_log_valves = tomcat_server_file["//Valve/@className"].reject {|name| !name.include? "org.apache.catalina.valves.AccessLogValve" }
   patterns = tomcat_server_file["//Valve/@pattern"].reject {|pattern| !pattern.include? "%t" }
-  
-  describe 'Each Valve element of class AccessLogValve must have the "%t" included in the pattern in order to log date and time of events in the log file' do 
-    subject { access_log_valves.count } 
+
+  describe 'Each Valve element of class AccessLogValve must have the "%t" included in the pattern in order to log date and time of events in the log file' do
+    subject { access_log_valves.count }
     it {should cmp patterns.count }
   end
 

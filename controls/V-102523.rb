@@ -75,10 +75,28 @@ the Tomcat website for specific details and additional configuration options.
   tag cci: ['CCI-001082']
   tag nist: ['SC-2']
 
-  describe "Review system documentation (SSP) for the dedicated management network" do
-    skip "locate the settings for the Remote Address Valve located at $CATALINA_HOME/webapps/manager/META-INF/context.xml. 
-    If the management network is not restricted to localhost or the management network. This is finding."
+  if !input('manager_app_installed')
+    impact 0.0
+    desc 'caveat', 'The maanger application is not installed. This is not a finding.'
+
+    describe "Manager application is not installed" do
+      skip "Manager application is not installed. This is not a finding"
+    end
+  else
+    catalina_base = input('catalina_base')
+    tomcat_context_file = xml("#{catalina_base}/webapps/manager/META-INF/context.xml")
+    valves = tomcat_context_file["//Valve/@className"]
+
+    describe.one do
+      describe 'The RemoteAddrValve must be defined' do
+        subject { valves }
+        it { should include 'org.apache.catalina.valves.RemoteAddrValve' }
+      end
+      describe 'The RemoteCIDRValve must be defined' do
+        subject { valves }
+        it { should include 'org.apache.catalina.valves.RemoteCIDRValve' }
+      end
+    end
   end
 
 end
-

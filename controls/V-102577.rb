@@ -70,15 +70,12 @@ directory=\"logs\"
   tag cci: ['CCI-000172', 'CCI-001814']
   tag nist: ['AU-12 c', 'CM-5 (1)']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
 
-  access_log_valves = tomcat_server_file["//Engine/Valve/@className"].reject {|name| !name.include? "org.apache.catalina.valves.AccessLogValve" }
-  
-  describe 'At least one Valve element of class AccessLogValve must be a nested component in the <Engine> container' do 
-    subject { access_log_valves } 
+  describe 'At least one Valve element of class AccessLogValve must be a nested component in the <Engine> container' do
+    subject { tomcat_server_file["//Engine//Valve/@className"] }
     it {should include "org.apache.catalina.valves.AccessLogValve" }
   end
 
 end
-

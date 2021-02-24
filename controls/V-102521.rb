@@ -65,10 +65,19 @@ address range.
   tag cci: ['CCI-001082']
   tag nist: ['SC-2']
 
-  describe "Compare the IP address associated with the JMX process with the network information in the SSP." do
-    skip "Review the System Security Plan. Ensure the IP address space is dedicated for system management purposes. If the IP address that is associated with the JMX process 
-    is not dedicated to system management usage, this is a finding."
+  if !input('jmx_is_used')
+    impact 0.0
+    desc 'caveat', 'JMX is not being used. This is not a finding.'
+    describe 'JMX is not being used' do
+      skip 'JMX is not being used. This is not a finding'
+    end
+  else
+    jmx_ip = input('jmx_ip')
+    jmx_param_value = "-Dcom.sun.management.jmxremote.host=#{jmx_ip}"
+
+    describe service('tomcat').params['CATALINA_OPTS'] do
+      it { should cmp jmx_param_value }
+    end
   end
 
 end
-

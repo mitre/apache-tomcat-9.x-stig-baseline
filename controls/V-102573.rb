@@ -56,13 +56,17 @@ as per the Tomcat clustering documentation provided at the Tomcat website.
   tag cci: ['CCI-002385']
   tag nist: ['SC-5']
 
-  describe " Review the System Security Plan (SSP) or other system documentation that
-  specifies the operational uptime requirements and RMF system categorization" do
-    skip "This requirement only applies to a system that is categorized as high
-  within the Risk Management Framework (RMF). If the system is categorized as high 
-  then audit the server.xml file to determine if the <Cluster> element is 
-  configured. If the system is not clustered and then this is a finding."
+  if !input('system_categorization').downcase == 'high'
+    impact 0.0
+    desc 'caveat', 'This requirement not applicable to the system since it is not categorized as high'
+  else
+    catalina_base = input('catalina_base')
+    tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+
+    describe "The system should apart of a server cluster" do
+      subject { tomcat_server_file["//Cluster"] }
+      it { should_not be_empty }
+    end
   end
 
 end
-

@@ -67,14 +67,21 @@ modify the FIPSMode setting and set it to FIPSMode=\"on\".
 'CCI-002475', 'CCI-002476']
   tag nist: ['IA-7', 'SC-23 (3)', 'SC-8', 'SC-8 (1)', 'SC-28 (1)', 'SC-28 (1)']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  fipsmode = tomcat_server_file["//Listener/@FIPSMode"] 
-  
-  describe "FIPSmode must be defined and set to on" do 
+  fipsmode = tomcat_server_file["//Listener/@FIPSMode"]
+
+  describe "FIPSmode must be defined and set to on" do
     subject { fipsmode }
     it { should cmp "on" }
-  end 
+  end
+
+  catalina_out_file = file("#{catalina_base}/logs/catalina.out")
+
+  if catalina_out_file.exist?
+    describe catalina_out_file do
+      its('content') { should_not match 'failed to set property[FIPSMODE] to [on]' }
+    end
+  end
 
 end
-

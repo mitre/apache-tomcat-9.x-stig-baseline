@@ -40,19 +40,15 @@ by adding the following command line flags to the systemd startup scripts in
   tag cci: ['CCI-000765']
   tag nist: ['IA-2 (1)']
 
-  tomcat_service_file = "/etc/systemd/system/tomcat.service"
-  environment = command("grep -I jmxremote.authenticate #{tomcat_service_file}").stdout.split(" ")
-  jmx_auth_value = Array.new 
-
-  environment.each do |param| 
-    if param.includes? "jmxremote.authenticate"
-      jmx_auth_value.push(param.split("=")[1])
-    end 
+  describe "The systemd startup file must exist" do
+    subject { service('tomcat') }
+    it { should be_installed }
   end
 
-  describe "The JMX remote monitoring service must be authenticated" do 
-    subject { jmx_auth_value } 
-    it { should_not include "false" }
+  if !service('tomcat').params.empty?
+    describe service('tomcat').params['Environment'] do
+      it { should_not match '-Dcom.sun.management.jmxremote.authenticate=false' }
+    end
   end
 
 end

@@ -37,10 +37,13 @@ of a CCRI.
   tag cci: ['CCI-000366']
   tag nist: ['CM-6 b']
 
-  describe "The ISSM/ISSO must be cognizant of all applications operating on the
-  Tomcat server" do 
-    skip "Review the Tomcat servers System Security Plan/server documentation. 
-    Access the Tomcat server and review the $CATALINA_BASE/webapps folder. Ensure that all webapps are documented in the SSP."
-  end 
+  catalina_base = input('catalina_base')
+  authorized_web_apps = input('authorized_web_apps')
+  server_webapps = command("ls #{catalina_base}/webapps").stdout.split("\n")
+
+  describe "The list of applications hosted on the server must be the same list documented in the SSP" do
+    subject { server_webapps - authorized_web_apps }
+    it { should be_empty }
+  end
 
 end

@@ -60,17 +60,22 @@ element.
   tag cci: ['CCI-001185']
   tag nist: ['SC-23 (1)']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  if !input('manager_app_installed')
+    impact 0.0
+    desc "caveat", "The manager application is not installed. This is not a finding"
+  end
+
+  catalina_base = input('catalina_base')
   tomcat_web_xmls = ["#{catalina_base}/conf/web.xml", "#{catalina_base}/webapps/manager/META-INF/web.xml"]
-  session_timeouts = Array.new 
-  
+  session_timeouts = Array.new
+
   tomcat_web_xmls.each do |web_xml|
     if file("#{web_xml}").exist?
       session_timeouts.concat(xml("#{web_xml}")["//session-timeout"])
     end
   end
 
-  describe "The session-timeout setting must be set to 10 minutes in either the manager application or overall web.xml file" do 
+  describe "The session-timeout setting must be set to 10 minutes in either the manager application or overall web.xml file" do
     subject { session_timeouts }
     it { should include 10 }
   end

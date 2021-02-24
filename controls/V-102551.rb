@@ -52,9 +52,9 @@ Use the new \"tomcat\" user account by setting; USER=tomcat
   tag cci: ['CCI-002235']
   tag nist: ['AC-6 (10)']
 
-  describe "Determine the OS user ID tied to the Tomcat process" do 
+  describe "Determine the OS user ID tied to the Tomcat process" do
     skip "If the user ID field of the passwd file is set to < 1000 or = 0, this is a finding."
   end
-  
+
 end
 

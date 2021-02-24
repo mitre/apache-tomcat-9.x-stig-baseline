@@ -32,9 +32,9 @@ parameter in the command/shell field of the passwd file."
   tag cci: ['CCI-002235']
   tag nist: ['AC-6 (10)']
 
-  describe passwd.users(/tomcat/) do 
+  describe passwd.users(/tomcat/) do
     its('shells') { should cmp "/usr/sbin/nologin" }
   end
-  
+
 end
 

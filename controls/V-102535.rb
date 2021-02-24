@@ -44,8 +44,8 @@ that assists users but does not provide sample data to users.
   tag nist: ['SI-11 b']
 
   describe "Error pages includes educational information on how to configure Tomcat as responses to the 401
-  (Unauthorized), 403 (Forbidden), and 404 (Not Found) JSP error codes and should not exist on production systems" do 
-    skip "For the $CATALINA_HOME/webapps/manager/WEB-INF/jsp/401.jsp and 
+  (Unauthorized), 403 (Forbidden), and 404 (Not Found) JSP error codes and should not exist on production systems" do
+    skip "For the $CATALINA_HOME/webapps/manager/WEB-INF/jsp/401.jsp and
     the ..402.jsp and ..403.jsp pages. Remove default and sensitive infomation."
   end
 

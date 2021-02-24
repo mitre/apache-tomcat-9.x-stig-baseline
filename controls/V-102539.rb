@@ -65,14 +65,11 @@ privileged user run the following case sensitive command:
   tag cci: ['CCI-001314']
   tag nist: ['SI-11 b']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
-  server_version = command("#{catalina_base}/bin/version.sh").stdout.split("\n")
+  catalina_base = input('catalina_base')
 
-  describe "Obfuscate the ServerInfo.properties file. Change the server.info and server.number to random values" do 
-    skip "The output of the version.sh file is below. If the ServerInfo.properties file matches identifying information 
-    below such as the type of server e.g. 'Apache Tomcat' or the correct version number of the server then this check has failed.
-    \nOutput of the version.sh\n#{server_version.join("\n")}"
+  describe command("#{catalina_base}/bin/version.sh") do
+    its('stdout') { should_not match 'Apache Tomcat' }
+    its('stdout') { should_not match /9\.[0-9]*\.[0-9]*/ }
   end
 
 end
-

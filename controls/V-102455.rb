@@ -92,9 +92,15 @@ read:
   tag cci: ['CCI-000213']
   tag nist: ['AC-3']
 
-  tomcat_service_file = "/etc/systemd/system/tomcat.service"
-  describe command("cat #{tomcat_service_file} | grep ExecStart | grep -security") do
-    its('stdout') { should_not eq '' }
+  describe "The systemd startup file must exist" do
+    subject { service('tomcat') }
+    it { should be_installed }
+  end
+
+  if !service('tomcat').params.empty?
+    describe service('tomcat').params do
+      its('ExecStart') { should match '-security' }
+    end
   end
 
 end

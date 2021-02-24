@@ -53,12 +53,12 @@ xargs chmod 750 $CATALINA_BASE/conf
   tag cci: ['CCI-000163', 'CCI-001813']
   tag nist: ['AU-9', 'CM-5 (1)']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
-  tomcat_conf_dir = file("#{catalina_base}/conf").mode 
+  catalina_base = input('catalina_base')
+  tomcat_conf_dir = file("#{catalina_base}/conf").mode
 
-  describe "$CATALINA_BASE/conf directory permissions must be set to 750" do 
+  describe "$CATALINA_BASE/conf directory permissions must be set to 750" do
     subject { tomcat_conf_dir }
-    it { should cmp 750 }
+    it { should cmp '0750' }
   end
 
 end

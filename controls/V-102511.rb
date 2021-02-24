@@ -58,19 +58,15 @@ by adding the following command line flags to the systemd startup scripts in
   tag cci: ['CCI-000770']
   tag nist: ['IA-2 (5)']
 
-  tomcat_service_file = "/etc/systemd/system/tomcat.service"
-  environment = command("grep -i jmxremote.ssl #{tomcat_service_file}").stdout.split(" ")
-  jmx_ssl_value = Array.new 
-
-  environment.each do |param| 
-    if param.includes? "jmxremote.ssl"
-      jmx_ssl_value.push(param.split("=")[1])
-    end 
+  describe "The systemd startup file must exist" do
+    subject { service('tomcat') }
+    it { should be_installed }
   end
 
-  describe "The JMX remote monitoring service must use TLS" do 
-    subject { jmx_ssl_value } 
-    it { should_not include "false" }
+  if !service('tomcat').params.empty?
+    describe service('tomcat').params['Environment'] do
+      it { should_not match '-Dcom.sun.management.jmxremote.ssl=false' }
+    end
   end
 
 end

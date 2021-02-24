@@ -66,9 +66,38 @@ with the connector and edit the associated web.xml files.  Assure the
   tag cci: ['CCI-001184']
   tag nist: ['SC-23']
 
-  describe "Identify each Tomcat IP address that is served by a load balancer or proxy" do 
-    skip "Review each Connector element in the server.xml file for the address setting and the clientAuth setting.
-    If a connector has a configured IP address that is proxied or load balanced and the clientAuth setting is not \"true\", this is a finding."
-  end
-end
+  load_balancer = input('behind_a_loadbalancer')
+  ma = input('mutual_authentication_not_required')
 
+  if !load_balancer || ma
+    impact 0.0
+    desc 'caveat', 'The service is not behind a proxy or load balacner or documented risk acceptance of not mutually authenticating
+    proxy or load balancer connections. This is not a finding.'
+
+    describe 'Server is not behind a load balancer or risk has been accepted' do
+      skip 'The server is not behind a load balancer or proxy or the SSP indicates that the risk has been accepted of not mutually authenticating connections'
+    end
+  else
+    catalina_base = input('catalina_base')
+    tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+    connector_count = tomcat_server_file["//Connector/"].count
+
+    (1..connector_count).each do |i|
+      conn = tomcat_server_file["//Connector[#{i}]/@address"]
+      if !conn.empty?
+        if conn[0] != "127.0.0.1" || conn[0] != "::1"
+          describe "The clientAuth element must be set to true" do
+            subject { tomcat_server_file["//Connector[#{i}]/@clientAuth"] }
+            it { should cmp "true" }
+          end
+        end
+      else
+        describe "Unable to find address field on Connector element" do
+          subject { conn }
+          it { should_not be_empty }
+        end
+      end
+    end
+  end
+
+end

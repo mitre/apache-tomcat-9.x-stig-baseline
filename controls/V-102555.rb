@@ -38,12 +38,12 @@ chgrp tomcat
   tag cci: ['CCI-001813']
   tag nist: ['CM-5 (1)']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  catalina_base = input('catalina_base')
   tomcat_dir = file(catalina_base)
-  describe tomcat_dir do 
+  describe tomcat_dir do
     its('owner') { should cmp 'root' }
     its('group') { should cmp 'tomcat' }
-  end 
+  end
 
 end
 

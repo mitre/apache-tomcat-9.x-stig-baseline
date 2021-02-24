@@ -24,8 +24,6 @@ While the Apache Tomcat STIG automation profile check was developed to provide t
 |---------------------------------------|------------------|--------------------------------------------|-----------------|----------------------|-------------|-------------|
 | Apache Tomcat 9.x STIG  | Ver 2, Rel 1    | https://public.cyber.mil/stigs/downloads/  |           |       | NA | NA |
 
-
-
 ## Getting Started
 
 ### Requirements
@@ -49,6 +47,7 @@ Goto https://www.inspec.io/downloads/ and consult the documentation for your Ope
 inspec --version
 ```
 
+<<<<<<< HEAD
 ### How to execute this instance  
 (See: https://www.inspec.io/docs/reference/cli/)
 

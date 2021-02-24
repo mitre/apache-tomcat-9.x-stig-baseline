@@ -54,33 +54,22 @@ protocol=\"org.apache.coyote.http11.Http11NioProtocol\" SSLEnabled=\"true\"
   tag cci: ['CCI-000213']
   tag nist: ['AC-3']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  connectors = tomcat_server_file["//Connector"] 
-  secure = tomcat_server_file["//Connector/@secure"]
-  scheme = tomcat_server_file["//Connector/@scheme"]
 
-  secure_values = secure.reject{|value| value != "true" }
-  scheme_values = scheme.reject{|value| value != "https" }
-
-  describe "Each Connector must have the secure parameter defined" do 
-    subject { connectors.count }
-    it { should cmp secure.count }
-  end 
-
-  describe "Each Connector must have the scheme parameter defined" do 
-    subject { connectors.count } 
-    it { should cmp scheme.count }
-  end 
-
-  describe "Each secure parameter must be set to true" do 
-    subject { secure_values.count } 
-    it { should eq connectors.count }
-  end
-
-  describe "Each sceheme parameter must be set to https" do 
-    subject { scheme_values.count } 
-    it { should eq connectors.count }
+  if tomcat_server_file["//Connector"].empty?
+    impact 0.0
+    describe "No Connector elements were found in #{tomcat_server_file}" do
+      skip "Test Skipped"
+    end
+  else
+    connectors_count = tomcat_server_file["//Connector/"].count
+    (1..connectors_count).each do |i|
+      describe tomcat_server_file do
+        its(["//Connector/@secure"]) { should include true }
+        its(["//Connector/@scheme"]) { should include 'https' }
+      end
+    end
   end
 
 end

@@ -48,10 +48,15 @@ following commands if the system differs:
   tag cci: ['CCI-001499']
   tag nist: ['CM-5 (6)']
 
-  tomcat_service_file = parse_config_file('/etc/systemd/system/tomcat.service')
-  describe tomcat_service_file do
-      its('UMask') { should cmp '0027' }
+  describe "The systemd startup file must exist" do
+    subject { service('tomcat') }
+    it { should be_installed }
   end
-  
-end
 
+  if !service('tomcat').params.empty?
+    describe service('tomcat').params do
+      its('UMask') { should cmp '0027' }
+    end
+  end
+
+end

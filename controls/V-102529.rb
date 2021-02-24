@@ -51,20 +51,15 @@ RECYCLE_FACADES=true'
   tag cci: ['CCI-001664']
   tag nist: ['SC-23 (3)']
 
-  tomcat_service_file = '/etc/systemd/system/tomcat.service'
-  environment = command("grep RECYCLE_FACADES #{tomcat_service_file}")
-  catalina_options = environment.stdout.split(" ")
-  recycle_facades = Array.new 
-
-  catalina_options.each do |option|
-    if option.include? "RECYCLE_FACADES"
-      recycle_facades.concat(option.split("=")[1])
-    end
+  describe "The systemd startup file must exist" do
+    subject { service('tomcat') }
+    it { should be_installed }
   end
-  
-  describe "The RECYCLE_FACADES setting must be set to true" do 
-    it { should include "true" }
+
+  if !service('tomcat').params.empty?
+    describe service('tomcat').params['Environment'] do
+      it { should match '-Dorg.apache.catalina.connector.RECYCLE_FACADES=true' }
+    end
   end
 
 end
-

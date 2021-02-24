@@ -42,10 +42,13 @@ of a CCRI.
   tag cci: ['CCI-000366']
   tag nist: ['CM-6 b']
 
-  describe "Compare the active Connectors and their associated IP ports with the
-  Connectors documented and approved in the SSP" do 
-    skip "If the Connectors that are configured on the Tomcat server are not approved
-    by the ISSO and documented in the SSP, this is a finding."
+  catalina_base = input('catalina_base')
+  tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
+  authorized_connector_ports = input('authorized_connector_ports')
+
+  describe tomcat_server_file do
+    its(["//Connector/@port"]) { should be_in authorized_connector_ports }
   end
+
 end
 

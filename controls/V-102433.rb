@@ -55,22 +55,23 @@ Tomcat:
   tag cci: ['CCI-000197', 'CCI-001453', 'CCI-002418']
   tag nist: ['IA-5 (1) (c)', 'AC-17 (2)', 'SC-8']
 
-
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  connectors = tomcat_server_file["//Connector"]
-  ssl_enabled_protocols = tomcat_server_file["//Connector/@SSLEnabledProtocols"]
 
-  tls = ssl_enabled_protocols.reject{|protocol| protocol != "TLSv1.2" }
+  if tomcat_server_file["//Connector"].empty?
+    impact 0.0
+    describe "No Connector elements were found in #{tomcat_server_file}" do
+      skip "Test Skipped"
+    end
+  else
+    ssp_ssl_enabled_protocols = input('ssl_enabled_protocols')
+    connector_count = tomcat_server_file["//Connector"].count
 
-  describe 'Each Connector should have "SSLEnabledProtocols" defined' do
-    subject { connectors.count }
-    it { should eq ssl_enabled_protocols.count }
-  end
-
-  describe "All SSLEnabledProtocol elements should have the value TLSv1.2" do
-    subject { tls.count }
-    it { should eq connectors.count }
+    (1..connector_count).each do |i|
+      describe tomcat_server_file do
+        its(["//Connector[#{i}]/@SSLEnabledProtocols"]) { should cmp ssp_ssl_enabled_protocols }
+      end
+    end
   end
 
 end

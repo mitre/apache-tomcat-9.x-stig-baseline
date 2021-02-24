@@ -46,12 +46,12 @@ xargs chmod 750 $CATALINA_BASE/logs
   tag cci: ['CCI-000162']
   tag nist: ['AU-9']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
-  tomcat_log_dir = file("#{catalina_base}/logs").mode 
+  catalina_base = input('catalina_base')
+  tomcat_log_dir = file("#{catalina_base}/logs").mode
 
-  describe "$CATALINA_BASE/logs directory permissions must be set to 750" do 
+  describe "$CATALINA_BASE/logs directory permissions must be set to 750" do
     subject { tomcat_log_dir }
-    it { should cmp 750 }
+    it { should cmp '0750' }
   end
 
 end

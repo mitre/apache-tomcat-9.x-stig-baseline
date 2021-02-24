@@ -52,27 +52,30 @@ a finding.
   tag cci: ['CCI-000186']
   tag nist: ['IA-5 (2) (b)']
 
-  catalina_base = input('catalina_base', value: '/usr/local/tomcat')
+  catalina_base = input('catalina_base')
   tomcat_server_file = xml("#{catalina_base}/conf/server.xml")
-  keystore_file = tomcat_server_file["//Connector/@keystoreFile"]
+  keystore_files = tomcat_server_file["//Connector/@keystoreFile"]
 
-  if file(keystore_file[0]).exist?
-    keystore_dir=keystore_file[0].split('/').slice(0,3).join('/')
 
-    describe keystore_dir do 
-        it { should cmp "#{catalina_base}" }
+  if file(keystore_files[0]).exist?
+    keystore_dir = keystore_files[0].split('/').slice(0,3).join('/')
+    describe keystore_dir do
+      it { should cmp catalina_base }
     end
 
-    describe file(keystore_file[0]) do 
-        its('mode') { should cmp '640' }
+    keystore_file_count = keystore_files.count
+
+    (0..keystore_file_count).each do |i|
+      describe file(keysore_files[i]) do
+        its('mode') { should cmp '0640' }
         its('owner') { should cmp 'root' }
         its('group') { should cmp 'tomcat' }
+      end
     end
   else
-    describe "Unable to locate the keystore file" do 
-      skip "Unable to find the location of the keystore file used for the Connector element" 
+    describe "Unable to locate the keystore file" do
+      skip "Unable to find the location of the keystore file used for the Connector element"
     end
   end
 
 end
-

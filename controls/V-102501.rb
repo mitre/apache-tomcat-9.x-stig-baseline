@@ -50,7 +50,7 @@ default server application.
   tag cci: ['CCI-000381']
   tag nist: ['CM-7 a']
 
-  describe "Review the contents inside ROOT directory" do 
+  describe "Review the contents inside ROOT directory" do
     skip "The ROOT directory contains default info check the index.jsp and RELEASE-NOTES.txt file for appropriate information that will be shown to users."
   end
 
