@@ -1,6 +1,6 @@
 include:
 - project: stig/inspec-scanning-integration
-  ref: 1.1.8
+  ref: 1.1.11
   file: templates/templates.yml
 
 before_script:
@@ -24,6 +24,15 @@ exec Apache_Tomcat_9.X:
     TARGET: 'rep.dsolab.io/baselines/tomcat:1.0'
 
 publish Apache_Tomcat_9.X:
-  extends: .ci:stage:publish:inspec
+  extends: .ci:stage:publish:inspec:artifacts
   dependencies:
+  - check Apache_Tomcat_9.X
+  - lint Apache_Tomcat_9.X
   - exec Apache_Tomcat_9.X
+
+sync:
+  extends: .ci:stage:publish:inspec:sync
+  variables:
+    SYNC_REPO: "repo1.dso.mil/disa/inspec/apache/tomcat_9.x.git"
+    SYNC_TOKEN: $IR1_TOMCAT_9
+
