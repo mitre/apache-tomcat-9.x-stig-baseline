@@ -40,7 +40,7 @@ inputs:
   type: boolean
   # example:
   # value: false
-  value: true
+  value: false
 
 - name: host_manager_app_installed
   description: A boolean parameter to check if the host-manager applications is installed
@@ -106,7 +106,7 @@ inputs:
   #   - 'three'
   # example 2
   # value: []
-  value: []
+  value: ['8080', '8443']
 
 - name: authorized_connector_addresses
   description: The list of authorized addresses for connectors on the server.
