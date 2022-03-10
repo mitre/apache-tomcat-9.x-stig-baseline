@@ -21,7 +21,7 @@ lint Apache_Tomcat_9.X:
 exec Apache_Tomcat_9.X:
   extends: .ci:stage:exec:inspec
   variables:
-    TARGET: 'rep.dsolab.io/baselines/tomcat:1.0'
+    TARGET: 'rep.dsolab.io:8443/baselines/tomcat:2.0'
 
 publish Apache_Tomcat_9.X:
   extends: .ci:stage:publish:inspec:artifacts

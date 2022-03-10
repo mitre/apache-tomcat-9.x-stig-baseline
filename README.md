@@ -54,16 +54,16 @@ inspec --version
 #### Execute a single Control in the Profile 
 **Note**: Replace the profile's directory name - e.g. - `<Profile>` with `.` if currently in the profile's root directory.
 ```sh
-inspec exec <Profile>/controls/V-102427.rb --show-progress
+inspec exec <Profile>/controls/V-222926.rb --show-progress
 ```
 or use the --controls flag to execute checking with a subset of controls
 ```sh
-inspec exec <Profile> --controls=V-102427.rb V-102427.rb --show-progress
+inspec exec <Profile> --controls=V-222926.rb V-222926.rb --show-progress
 ```
 
 #### Execute a Single Control and save results as JSON 
 ```sh
-inspec exec <Profile> --controls=V-102427.rb --show-progress --reporter json:results.json
+inspec exec <Profile> --controls=V-222926.rb --show-progress --reporter json:results.json
 ```
 
 #### Execute All Controls in the Profile 
@@ -82,37 +82,37 @@ inspec exec <Profile> --show-progress  --reporter json:results.json
 
 These checks are not included in the automation process.
 
-| Control Number | Description                                                                                                   |
+| Control Number | Description                                                                                                                     |
 |----------------|---------------------------------------------------------------------------------------------------------------------------------|
-| V-102427       | The number of allowed simultaneous sessions to the manager application must be limited.                                         |
-| V-102429       | Secured connectors must be configured to use strong encryption ciphers.                                                         |
-| V-102445       | Default password for keystore must be changed.                                                                                  |
-| V-102451       | DefaultServlet must be set to readonly for PUT and DELETE.                                                                      |
-| V-102457       | Tomcat servers behind a proxy or load balancer must log client IP.                                                              |
-| V-102487       | Unapproved connectors must be disabled.                                                                                         |
-| V-102501       | Tomcat default ROOT web application must be removed.                                                                            |
-| V-102515       | DoD root CA certificates must be installed in Tomcat trust store.                                                               |
-| V-102517       | Keystore file must be protected.                                                                                                |
-| V-102521       | Access to JMX management interface must be restricted.                                                                          |
-| V-102523       | Access to Tomcat manager application must be restricted.                                                                        |
-| V-102525       | Tomcat servers must mutually authenticate proxy or load balancer connections.                                                   |
-| V-102531       | Clusters must operate on a trusted network.                                                                                     |
-| V-102535       | Default error pages for manager application must be customized.                                                                 |
-| V-102539       | Tomcat server version must not be sent with warnings and errors.                                                                |
-| V-102551       | Tomcat user account must be a non-privileged user.                                                                              |
-| V-102569       | Multifactor certificate-based tokens (CAC) must be used when accessing the management interface.                                |
-| V-102571       | Certificates in the trust store must be issued/signed by an approved CA.                                                        |
-| V-102573       | The application server, when categorized as a high availability system within RMF, must be in a high-availability (HA) cluster. |
-| V-102575       | Tomcat server must be patched for security vulnerabilities.                                                                     |
-| V-102579       | Changes to $CATALINA_HOME/bin/ folder must be logged.                                                                           |
-| V-102581       | Changes to $CATALINA_BASE/conf/ folder must be logged.                                                                          |
-| V-102583       | Changes to $CATALINA_HOME/lib/ folder must be logged.                                                                           |
-| V-102585       | Application servers must use NIST-approved or NSA-approved key management technology and processes.                             |
-| V-102595       | Tomcat users in a management role must be approved by the ISSO.                                                                 |
-| V-102597       | Hosted applications must be documented in the system security plan.                                                             |
-| V-102599       | Connectors must be approved by the ISSO.                                                                                        |
-| V-102601       | Connector address attribute must be set.                                                                                        |
-| V-102621       | The application server must alert the SA and ISSO, at a minimum, in the event of a log processing failure.                      |
+| V-222926       | The number of allowed simultaneous sessions to the manager application must be limited.                                         |
+| V-222927       | Secured connectors must be configured to use strong encryption ciphers.                                                         |
+| V-222931       | Default password for keystore must be changed.                                                                                  |
+| V-222934       | DefaultServlet must be set to readonly for PUT and DELETE.                                                                      |
+| V-222937       | Tomcat servers behind a proxy or load balancer must log client IP.                                                              |
+| V-222952       | Unapproved connectors must be disabled.                                                                                         |
+| V-222959       | Tomcat default ROOT web application must be removed.                                                                            |
+| V-222966       | DoD root CA certificates must be installed in Tomcat trust store.                                                               |
+| V-222967       | Keystore file must be protected.                                                                                                |
+| V-222969       | Access to JMX management interface must be restricted.                                                                          |
+| V-222970       | Access to Tomcat manager application must be restricted.                                                                        |
+| V-222971       | Tomcat servers must mutually authenticate proxy or load balancer connections.                                                   |
+| V-222974       | Clusters must operate on a trusted network.                                                                                     |
+| V-222976       | Default error pages for manager application must be customized.                                                                 |
+| V-222978       | Tomcat server version must not be sent with warnings and errors.                                                                |
+| V-222984       | Tomcat user account must be a non-privileged user.                                                                              |
+| V-222993       | Multifactor certificate-based tokens (CAC) must be used when accessing the management interface.                                |
+| V-222994       | Certificates in the trust store must be issued/signed by an approved CA.                                                        |
+| V-222995       | The application server, when categorized as a high availability system within RMF, must be in a high-availability (HA) cluster. |
+| V-222996       | Tomcat server must be patched for security vulnerabilities.                                                                     |
+| V-222998       | Changes to $CATALINA_HOME/bin/ folder must be logged.                                                                           |
+| V-222999       | Changes to $CATALINA_BASE/conf/ folder must be logged.                                                                          |
+| V-223000       | Changes to $CATALINA_HOME/lib/ folder must be logged.                                                                           |
+| V-223001       | Application servers must use NIST-approved or NSA-approved key management technology and processes.                             |
+| V-223006       | Tomcat users in a management role must be approved by the ISSO.                                                                 |
+| V-223007       | Hosted applications must be documented in the system security plan.                                                             |
+| V-223008       | Connectors must be approved by the ISSO.                                                                                        |
+| V-223009       | Connector address attribute must be set.                                                                                        |
+| V-223010       | The application server must alert the SA and ISSO, at a minimum, in the event of a log processing failure.                      |
 
 **Normal Checks**
 
@@ -120,62 +120,60 @@ These checks will follow the normal automation process and will report accurate 
 
 | Control Number | Description                                                                                  |
 |----------------|----------------------------------------------------------------------------------------------|
-| V-102431       | HTTP Strict Transport Security (HSTS) must be enabled.                                       |
-| V-102433       | TLS 1.2 must be used on secured HTTP connectors.                                             |
-| V-102435       | AccessLogValve must be configured for each application context.                              |
-| V-102447       | Cookies must have secure flag set.                                                           |
-| V-102449       | Cookies must have http-only flag set.                                                        |
-| V-102453       | Connectors must be secured.                                                                  |
-| V-102455       | The Java Security Manager must be enabled.                                                   |
-| V-102461       | Date and time of events must be logged.                                                      |
-| V-102463       | Remote hostname must be logged.                                                              |
-| V-102465       | HTTP status code must be logged.                                                             |
-| V-102467       | The first line of request must be logged.                                                    |
-| V-102469       | $CATALINA_BASE/logs folder permissions must be set to 750.                                   |
-| V-102471       | Files in the $CATALINA_BASE/logs/ folder must have their permissions set to 640.             |
-| V-102473       | Files in the $CATALINA_BASE/conf/ folder must have their permissions set to 640.             |
-| V-102477       | Jar files in the $CATALINA_HOME/bin/ folder must have their permissions set to 640.          |
-| V-102481       | Tomcat user UMASK must be set to 0027.                                                       |
-| V-102483       | Stack tracing must be disabled.                                                              |
-| V-102485       | The shutdown port must be disabled.                                                          |
-| V-102489       | DefaultServlet debug parameter must be disabled.                                             |
-| V-102491       | DefaultServlet directory listings parameter must be disabled.                                |
-| V-102493       | The deployXML attribute must be set to false in hosted environments.                         |
-| V-102495       | Autodeploy must be disabled.                                                                 |
-| V-102497       | xpoweredBy attribute must be disabled.                                                       |
-| V-102499       | Example applications must be removed.                                                        |
-| V-102503       | Documentation must be removed.                                                               |
-| V-102505       | Applications in privileged mode must be approved by the ISSO.                                |
-| V-102507       | Tomcat management applications must use LDAP realm authentication.                           |
-| V-102509       | JMX authentication must be secured.                                                          |
-| V-102511       | TLS must be enabled on JMX.                                                                  |
-| V-102513       | LDAP authentication must be secured.                                                         |
-| V-102527       | Idle timeout for management application must be set to 10 minutes.                           |
-| V-102529       | Tomcat must be configured to limit data exposure between applications.                       |
-| V-102533       | ErrorReportValve showServerInfo must be set to false.                                        |
-| V-102537       | ErrorReportValve showReport must be set to false.                                            |
-| V-102541       | Idle timeout for management application must be set to 10 minutes.                           |
-| V-102543       | LockOutRealms must be used for management of Tomcat.                                         |
-| V-102545       | LockOutRealms failureCount attribute must be set to 5 failed logins for admin users.         |
-| V-102547       | LockOutRealms lockOutTime attribute must be set to 600 seconds (10 minutes) for admin users. |
-| V-102549       | Tomcat user account must be set to nologin.                                                  |
-| V-102553       | Application user name must be logged.                                                        |
-| V-102555       | $CATALINA_HOME folder must be owned by the root user, group tomcat.                          |
-| V-102557       | $CATALINA_BASE/conf/ folder must be owned by root, group tomcat.                             |
-| V-102559       | $CATALINA_BASE/logs/ folder must be owned by tomcat user, group tomcat.                      |
-| V-102561       | $CATALINA_BASE/temp/ folder must be owned by tomcat user, group tomcat.                      |
-| V-102563       | $CATALINA_BASE/temp folder permissions must be set to 750.                                   |
-| V-102565       | $CATALINA_BASE/work/ folder must be owned by tomcat user, group tomcat.                      |
-| V-102567       | Idle timeout for management application must be set to 10 minutes.                           |
-| V-102577       | AccessLogValve must be configured for Catalina engine.                                       |
-| V-102587       | STRICT_SERVLET_COMPLIANCE must be set to true.                                               |
-| V-102589       | RECYCLE_FACADES must be set to true.                                                         |
-| V-102591       | ALLOW_BACKSLASH must be set to false.                                                        |
-| V-102593       | ENFORCE_ENCODING_IN_GET_WRITER must be set to true.                                          |
-| V-102603       | AccessLogValve must be configured per each virtual host.                                     |
-| V-102605       | $CATALINA_BASE/conf folder permissions must be set to 750.                                   |
-| V-102607       | $CATALINA_HOME/bin folder permissions must be set to 750.                                    |
-| V-102609       | Tomcat must use FIPS-validated ciphers on secured connectors.                                |
+| V-222928       | HTTP Strict Transport Security (HSTS) must be enabled.                                       |
+| V-222929       | TLS 1.2 must be used on secured HTTP connectors.                                             |
+| V-222930       | AccessLogValve must be configured for each application context.                              |
+| V-222932       | Cookies must have secure flag set.                                                           |
+| V-222933       | Cookies must have http-only flag set.                                                        |
+| V-222935       | Connectors must be secured.                                                                  |
+| V-222936       | The Java Security Manager must be enabled.                                                   |
+| V-222939       | Date and time of events must be logged.                                                      |
+| V-222940       | Remote hostname must be logged.                                                              |
+| V-222941       | HTTP status code must be logged.                                                             |
+| V-222942       | The first line of request must be logged.                                                    |
+| V-222943       | $CATALINA_BASE/logs folder permissions must be set to 750.                                   |
+| V-222942       | Files in the $CATALINA_BASE/logs/ folder must have their permissions set to 640.             |
+| V-222945       | Files in the $CATALINA_BASE/conf/ folder must have their permissions set to 640.             |
+| V-222947       | Jar files in the $CATALINA_HOME/bin/ folder must have their permissions set to 640.          |
+| V-222949       | Tomcat user UMASK must be set to 0027.                                                       |
+| V-222950       | Stack tracing must be disabled.                                                              |
+| V-222951       | The shutdown port must be disabled.                                                          |
+| V-222953       | DefaultServlet debug parameter must be disabled.                                             |
+| V-222954       | DefaultServlet directory listings parameter must be disabled.                                |
+| V-222955       | The deployXML attribute must be set to false in hosted environments.                         |
+| V-222956       | Autodeploy must be disabled.                                                                 |
+| V-222957       | xpoweredBy attribute must be disabled.                                                       |
+| V-222958       | Example applications must be removed.                                                        |
+| V-222960       | Documentation must be removed.                                                               |
+| V-222961       | Applications in privileged mode must be approved by the ISSO.                                |
+| V-222962       | Tomcat management applications must use LDAP realm authentication.                           |
+| V-222963       | JMX authentication must be secured.                                                          |
+| V-222964       | TLS must be enabled on JMX.                                                                  |
+| V-222965       | LDAP authentication must be secured.                                                         |
+| V-222979       | Idle timeout for management application must be set to 10 minutes.                           |
+| V-222973       | Tomcat must be configured to limit data exposure between applications.                       |
+| V-222975       | ErrorReportValve showServerInfo must be set to false.                                        |
+| V-222977       | ErrorReportValve showReport must be set to false.                                            |
+| V-222980       | LockOutRealms must be used for management of Tomcat.                                         |
+| V-222981       | LockOutRealms failureCount attribute must be set to 5 failed logins for admin users.         |
+| V-222982       | LockOutRealms lockOutTime attribute must be set to 600 seconds (10 minutes) for admin users. |
+| V-222983       | Tomcat user account must be set to nologin.                                                  |
+| V-222985       | Application user name must be logged.                                                        |
+| V-222986       | $CATALINA_HOME folder must be owned by the root user, group tomcat.                          |
+| V-222987       | $CATALINA_BASE/conf/ folder must be owned by root, group tomcat.                             |
+| V-222988       | $CATALINA_BASE/logs/ folder must be owned by tomcat user, group tomcat.                      |
+| V-222989       | $CATALINA_BASE/temp/ folder must be owned by tomcat user, group tomcat.                      |
+| V-222990       | $CATALINA_BASE/temp folder permissions must be set to 750.                                   |
+| V-222991       | $CATALINA_BASE/work/ folder must be owned by tomcat user, group tomcat.                      |
+| V-222997       | AccessLogValve must be configured for Catalina engine.                                       |
+| V-223002       | STRICT_SERVLET_COMPLIANCE must be set to true.                                               |
+| V-223003       | RECYCLE_FACADES must be set to true.                                                         |
+| V-223004       | ALLOW_BACKSLASH must be set to false.                                                        |
+| V-223005       | ENFORCE_ENCODING_IN_GET_WRITER must be set to true.                                          |
+| V-222938       | AccessLogValve must be configured per each virtual host.                                     |
+| V-222946       | $CATALINA_BASE/conf folder permissions must be set to 750.                                   |
+| V-222948       | $CATALINA_HOME/bin folder permissions must be set to 750.                                    |
+| V-222968       | Tomcat must use FIPS-validated ciphers on secured connectors.                                |
 
 ## Authors
 
