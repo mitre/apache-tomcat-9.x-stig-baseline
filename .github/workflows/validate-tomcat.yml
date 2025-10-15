@@ -25,13 +25,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
       - name: Install cinc-auditor
         run: |
           curl -L https://omnitruck.cinc.sh/install.sh | sudo bash -s -- -P cinc-auditor
 
       - name: Install SAF CLI
         run: |
-          npm install -g @mitre/saf --legacy-peer-deps
+          npm install -g @mitre/saf
 
       - name: Validate profile syntax
         run: cinc-auditor check .
