@@ -1,0 +1,112 @@
+name: Validate Tomcat STIG Baseline
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'controls/**'
+      - 'libraries/**'
+      - 'files/**'
+      - 'inspec.yml'
+      - 'inspec_inputs/**'
+      - '.github/workflows/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'controls/**'
+      - 'libraries/**'
+      - 'files/**'
+      - 'inspec.yml'
+      - 'inspec_inputs/**'
+      - '.github/workflows/**'
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: 'Profile variant to execute (vanilla, hardened, etc.)'
+        required: false
+        default: vanilla
+
+jobs:
+  validate:
+    name: Run InSpec profile
+    runs-on: ubuntu-latest
+    services:
+      tomcat:
+        image: tomcat:9.0-jdk11-temurin
+        ports:
+          - 8080:8080
+        options: >-
+          --health-cmd="curl --fail http://localhost:8080 || exit 1"
+          --health-interval=10s
+          --health-retries=12
+          --health-start-period=10s
+          --health-timeout=5s
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Determine profile settings
+        run: |
+          PROFILE_VARIANT="${{ github.event.inputs.profile }}"
+          if [ -z "$PROFILE_VARIANT" ]; then
+            PROFILE_VARIANT="vanilla"
+          fi
+          echo "PROFILE_VARIANT=$PROFILE_VARIANT" >> "$GITHUB_ENV"
+          echo "REPORT_DIR=reports" >> "$GITHUB_ENV"
+          if [ -f "inspec_inputs/${PROFILE_VARIANT}.yml" ]; then
+            echo "INSPEC_INPUT_FILE=inspec_inputs/${PROFILE_VARIANT}.yml" >> "$GITHUB_ENV"
+          else
+            echo "INSPEC_INPUT_FILE=" >> "$GITHUB_ENV"
+          fi
+
+      - name: Install tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl jq
+          curl -L https://omnitruck.cinc.sh/install.sh | sudo bash -s -- -P cinc-auditor
+
+      - name: Verify InSpec CLI
+        run: |
+          inspec version
+          inspec env
+
+      - name: Wait for Tomcat bootstrap
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail http://localhost:8080 >/dev/null; then
+              echo "Tomcat is responding"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Tomcat failed to respond in time" >&2
+          exit 1
+
+      - name: Validate profile syntax
+        run: inspec check .
+
+      - name: Execute baseline against Tomcat (${{ env.PROFILE_VARIANT }})
+        run: |
+          mkdir -p "${REPORT_DIR}"
+          TOMCAT_CONTAINER_ID="${{ job.services.tomcat.id }}"
+          EXTRA_INPUT=""
+          if [ -n "${INSPEC_INPUT_FILE}" ] && [ -f "${INSPEC_INPUT_FILE}" ]; then
+            EXTRA_INPUT="--input-file ${INSPEC_INPUT_FILE}"
+          fi
+          inspec exec . \
+            --target "docker://${TOMCAT_CONTAINER_ID}" \
+            --reporter cli \
+            --reporter json:${REPORT_DIR}/tomcat-${PROFILE_VARIANT}.json \
+            --reporter junit:${REPORT_DIR}/tomcat-${PROFILE_VARIANT}.xml \
+            --show-progress \
+            ${EXTRA_INPUT}
+
+      - name: Upload InSpec reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: inspec-${{ env.PROFILE_VARIANT }}-reports
+          path: ${{ env.REPORT_DIR }}

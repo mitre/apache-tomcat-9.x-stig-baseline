@@ -1,0 +1,16 @@
+catalina_base: /usr/local/tomcat
+max_active_sessions: 1
+ssl_enabled_protocols: TLSv1.2
+behind_a_loadbalancer: false
+manager_app_installed: false
+host_manager_app_installed: false
+jmx_is_used: false
+jmx_ip: ''
+mutual_authentication_not_required: false
+cluster_server: false
+system_categorization: high
+authorized_web_apps: []
+authorized_connector_ports:
+  - '8080'
+authorized_connector_addresses: []
+keystore_file: []
