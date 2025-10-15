@@ -1,0 +1,95 @@
+name: Validate Tomcat STIG Baseline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Run InSpec profile
+    runs-on: ubuntu-latest
+
+    services:
+      tomcat:
+        image: tomcat:9.0-jdk11-temurin
+        options: --health-cmd="bash -c 'exec 3<>/dev/tcp/localhost/8080'" --health-interval=10s --health-timeout=3s --health-retries=10 --health-start-period=30s
+        ports:
+          - 8080:8080
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install cinc-auditor
+        run: |
+          curl -L https://omnitruck.cinc.sh/install.sh | sudo bash -s -- -P cinc-auditor
+
+      - name: Install SAF CLI
+        run: |
+          npm install -g @mitre/saf
+
+      - name: Validate profile syntax
+        run: cinc-auditor check .
+
+      - name: Wait for Tomcat to be ready
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl -s http://localhost:8080 > /dev/null 2>&1; then
+              echo "Tomcat is ready"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Tomcat failed to start" >&2
+          exit 1
+
+      - name: Get Tomcat container ID
+        run: |
+          mkdir -p reports
+          CONTAINER_ID=$(docker ps -q -f "ancestor=tomcat:9.0-jdk11-temurin" | head -1)
+          echo "TOMCAT_CONTAINER_ID=$CONTAINER_ID" >> "$GITHUB_ENV"
+          echo "Found Tomcat container: $CONTAINER_ID"
+
+      - name: Execute InSpec baseline
+        continue-on-error: true
+        run: |
+          cinc-auditor exec . \
+            --target "docker://${TOMCAT_CONTAINER_ID}" \
+            --input-file inputs-vanilla.yml \
+            --reporter json:reports/results-${{ github.run_id }}.json
+
+      - name: Display results summary
+        run: |
+          saf view summary -i reports/results-${{ github.run_id }}.json
+
+      - name: Generate markdown summary
+        run: |
+          saf view summary -i reports/results-${{ github.run_id }}.json --format=markdown -o reports/markdown-summary.md
+
+      - name: Append summary to job summary
+        if: always()
+        run: |
+          if [ -f reports/markdown-summary.md ]; then
+            cat reports/markdown-summary.md >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload InSpec results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: inspec-results-${{ github.run_id }}
+          path: reports/results-${{ github.run_id }}.json
+
+      - name: Validate against threshold
+        run: |
+          saf validate threshold -i reports/results-${{ github.run_id }}.json -F threshold-vanilla.yml

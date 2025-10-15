@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  tomcat:
+    image: tomcat:9.0-jdk11-temurin
+    container_name: tomcat-stig-baseline
+    ports:
+      - "8080:8080"
+    healthcheck:
+      # Check if Tomcat is responding on port 8080
+      # Using bash to test TCP connection directly (more reliable than curl)
+      test: 
+        - CMD
+        - bash
+        - -c
+        - "exec 3<>/dev/tcp/localhost/8080"
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
+    environment:
+      CATALINA_BASE: /usr/local/tomcat
+    volumes:
+      - tomcat-data:/usr/local/tomcat/webapps
+      - tomcat-logs:/usr/local/tomcat/logs
+      - ./files/index.html:/usr/local/tomcat/webapps/ROOT/index.html
+    restart: unless-stopped
+
+volumes:
+  tomcat-data:
+  tomcat-logs:
