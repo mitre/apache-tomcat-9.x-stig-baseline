@@ -29,6 +29,10 @@ jobs:
         run: |
           curl -L https://omnitruck.cinc.sh/install.sh | sudo bash -s -- -P cinc-auditor
 
+      - name: Install SAF CLI
+        run: |
+          npm install -g @mitre/saf
+
       - name: Validate profile syntax
         run: cinc-auditor check .
 
@@ -60,19 +64,19 @@ jobs:
             --reporter json:reports/results-${{ github.run_id }}.json
 
       - name: Display results summary
-        uses: mitre/saf_action@v1.5.2
-        with:
-          command_string: "view summary -i reports/results-${{ github.run_id }}.json"
+        run: |
+          saf view summary -i reports/results-${{ github.run_id }}.json
 
       - name: Generate markdown summary
-        uses: mitre/saf_action@v1.5.2
-        with:
-          command_string: "summary -i reports/results-${{ github.run_id }}.json --format=markdown --no-stdout -o reports/markdown-summary.md"
+        run: |
+          saf view summary -i reports/results-${{ github.run_id }}.json --format=markdown -o reports/markdown-summary.md
 
       - name: Append summary to job summary
         if: always()
         run: |
-          cat reports/markdown-summary.md >> $GITHUB_STEP_SUMMARY
+          if [ -f reports/markdown-summary.md ]; then
+            cat reports/markdown-summary.md >> $GITHUB_STEP_SUMMARY
+          fi
 
       - name: Upload InSpec results
         if: always()
@@ -82,6 +86,5 @@ jobs:
           path: reports/results-${{ github.run_id }}.json
 
       - name: Validate against threshold
-        uses: mitre/saf_action@v1.5.2
-        with:
-          command_string: "validate threshold -i reports/results-${{ github.run_id }}.json -F threshold-vanilla.yml"
+        run: |
+          saf validate threshold -i reports/results-${{ github.run_id }}.json -F threshold-vanilla.yml
