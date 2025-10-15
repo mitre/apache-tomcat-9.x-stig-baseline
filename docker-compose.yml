@@ -3,19 +3,22 @@ version: '3.8'
 services:
   tomcat:
     image: tomcat:9.0-jdk11-temurin
+    container_name: tomcat-stig-baseline
     ports:
       - "8080:8080"
     healthcheck:
-      test: ["CMD", "sh", "-c", "exec 3<>/dev/tcp/localhost/8080"]
+      # TCP socket health check - just verifies the port is listening
+      test: ["CMD", "sh", "-c", "exec 3<>/dev/tcp/localhost/8080 && echo 'Tomcat is healthy'"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 15s
+      start_period: 20s
     environment:
       CATALINA_BASE: /usr/local/tomcat
     volumes:
       - tomcat-data:/usr/local/tomcat/webapps
       - tomcat-logs:/usr/local/tomcat/logs
+    restart: unless-stopped
 
 volumes:
   tomcat-data:
