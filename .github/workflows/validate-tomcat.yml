@@ -64,6 +64,16 @@ jobs:
         with:
           command_string: "view summary -i reports/results-${{ github.run_id }}.json"
 
+      - name: Generate markdown summary
+        uses: mitre/saf_action@v1.5.2
+        with:
+          command_string: "summary -i reports/results-${{ github.run_id }}.json --format=markdown --no-stdout -o reports/markdown-summary.md"
+
+      - name: Append summary to job summary
+        if: always()
+        run: |
+          cat reports/markdown-summary.md >> $GITHUB_STEP_SUMMARY
+
       - name: Upload InSpec results
         if: always()
         uses: actions/upload-artifact@v4
