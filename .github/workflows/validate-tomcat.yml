@@ -31,7 +31,7 @@ jobs:
 
       - name: Install SAF CLI
         run: |
-          npm install -g @mitre/saf
+          npm install -g @mitre/saf --legacy-peer-deps
 
       - name: Validate profile syntax
         run: cinc-auditor check .
