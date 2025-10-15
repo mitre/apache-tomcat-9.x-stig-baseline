@@ -52,13 +52,18 @@ jobs:
           echo "REPORT_NAME=$REPORT_NAME" >> "$GITHUB_ENV"
           mkdir -p reports
 
+      - name: Get Tomcat container ID
+        run: |
+          CONTAINER_ID=$(docker ps -q -f "ancestor=tomcat:9.0-jdk11-temurin" | head -1)
+          echo "TOMCAT_CONTAINER_ID=$CONTAINER_ID" >> "$GITHUB_ENV"
+          echo "Found Tomcat container: $CONTAINER_ID"
+
       - name: Execute InSpec baseline
         run: |
           cinc-auditor exec . \
-            --target "docker://tomcat" \
+            --target "docker://${TOMCAT_CONTAINER_ID}" \
             --input-file inputs-vanilla.yml \
-            --reporter cli \
-            --reporter json:reports/${REPORT_NAME} \
+            --reporter cli json:reports/${REPORT_NAME} \
             --show-progress
 
       - name: Upload InSpec results
