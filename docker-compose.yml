@@ -23,6 +23,7 @@ services:
     volumes:
       - tomcat-data:/usr/local/tomcat/webapps
       - tomcat-logs:/usr/local/tomcat/logs
+      - ./files/index.html:/usr/local/tomcat/webapps/ROOT/index.html
     restart: unless-stopped
 
 volumes:
