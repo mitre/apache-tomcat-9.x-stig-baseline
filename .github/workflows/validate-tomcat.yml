@@ -46,8 +46,17 @@ jobs:
 
       - name: Execute InSpec baseline
         run: |
+          mkdir -p reports
           cinc-auditor exec . \
             --target "docker://tomcat" \
             --input-file inputs-vanilla.yml \
             --reporter cli \
+            --reporter json:reports/results.json \
             --show-progress
+
+      - name: Upload InSpec results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: inspec-results
+          path: reports/results.json
