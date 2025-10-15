@@ -57,21 +57,21 @@ jobs:
           cinc-auditor exec . \
             --target "docker://${TOMCAT_CONTAINER_ID}" \
             --input-file inputs-vanilla.yml \
-            --reporter json:reports/results.json
+            --reporter json:reports/results-${{ github.run_id }}.json
 
       - name: Display results summary
         uses: mitre/saf_action@v1.5.2
         with:
-          command_string: "view summary -i reports/results.json"
+          command_string: "view summary -i reports/results-${{ github.run_id }}.json"
 
       - name: Upload InSpec results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: inspec-results
-          path: reports/results.json
+          name: inspec-results-${{ github.run_id }}
+          path: reports/results-${{ github.run_id }}.json
 
       - name: Validate against threshold
         uses: mitre/saf_action@v1.5.2
         with:
-          command_string: "validate threshold -i reports/results.json -F threshold-vanilla.yml"
+          command_string: "validate threshold -i reports/results-${{ github.run_id }}.json -F threshold-vanilla.yml"
