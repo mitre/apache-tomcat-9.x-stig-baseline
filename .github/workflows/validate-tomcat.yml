@@ -44,16 +44,9 @@ jobs:
           echo "Tomcat failed to start" >&2
           exit 1
 
-      - name: Generate report filename
-        run: |
-          COMMIT_SHA=$(git rev-parse --short HEAD)
-          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-          REPORT_NAME="inspec-results-${COMMIT_SHA}-${TIMESTAMP}.json"
-          echo "REPORT_NAME=$REPORT_NAME" >> "$GITHUB_ENV"
-          mkdir -p reports
-
       - name: Get Tomcat container ID
         run: |
+          mkdir -p reports
           CONTAINER_ID=$(docker ps -q -f "ancestor=tomcat:9.0-jdk11-temurin" | head -1)
           echo "TOMCAT_CONTAINER_ID=$CONTAINER_ID" >> "$GITHUB_ENV"
           echo "Found Tomcat container: $CONTAINER_ID"
@@ -64,21 +57,21 @@ jobs:
           cinc-auditor exec . \
             --target "docker://${TOMCAT_CONTAINER_ID}" \
             --input-file inputs-vanilla.yml \
-            --reporter json:reports/${REPORT_NAME}
+            --reporter json:reports/results.json
 
       - name: Display results summary
         uses: mitre/saf_action@v1.5.2
         with:
-          command_string: "view summary -i reports/${REPORT_NAME}"
+          command_string: "view summary -i reports/results.json"
 
       - name: Upload InSpec results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: inspec-results
-          path: reports/inspec-results-*.json
+          path: reports/results.json
 
       - name: Validate against threshold
         uses: mitre/saf_action@v1.5.2
         with:
-          command_string: "validate threshold -i reports/${REPORT_NAME} -F threshold-vanilla.yml"
+          command_string: "validate threshold -i reports/results.json -F threshold-vanilla.yml"
