@@ -7,12 +7,17 @@ services:
     ports:
       - "8080:8080"
     healthcheck:
-      # TCP socket health check - just verifies the port is listening
-      test: ["CMD", "sh", "-c", "exec 3<>/dev/tcp/localhost/8080 && echo 'Tomcat is healthy'"]
+      # Check if Tomcat is responding on port 8080
+      # Using bash to test TCP connection directly (more reliable than curl)
+      test: 
+        - CMD
+        - bash
+        - -c
+        - "exec 3<>/dev/tcp/localhost/8080"
       interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 20s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
     environment:
       CATALINA_BASE: /usr/local/tomcat
     volumes:
