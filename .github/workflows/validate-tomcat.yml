@@ -59,12 +59,17 @@ jobs:
           echo "Found Tomcat container: $CONTAINER_ID"
 
       - name: Execute InSpec baseline
+        continue-on-error: true
         run: |
           cinc-auditor exec . \
             --target "docker://${TOMCAT_CONTAINER_ID}" \
             --input-file inputs-vanilla.yml \
-            --reporter cli json:reports/${REPORT_NAME} \
-            --show-progress
+            --reporter json:reports/${REPORT_NAME}
+
+      - name: Display results summary
+        uses: mitre/saf_action@v1.5.2
+        with:
+          command_string: "view summary -i reports/${REPORT_NAME}"
 
       - name: Upload InSpec results
         if: always()
@@ -72,3 +77,8 @@ jobs:
         with:
           name: inspec-results
           path: reports/inspec-results-*.json
+
+      - name: Validate against threshold
+        uses: mitre/saf_action@v1.5.2
+        with:
+          command_string: "validate threshold -i reports/${REPORT_NAME} -F threshold-vanilla.yml"
