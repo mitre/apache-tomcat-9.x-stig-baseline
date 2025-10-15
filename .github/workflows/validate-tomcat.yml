@@ -17,7 +17,7 @@ jobs:
     services:
       tomcat:
         image: tomcat:9.0-jdk11-temurin
-        options: --health-cmd="sh -c 'exec 3<>/dev/tcp/localhost/8080'" --health-interval=10s --health-timeout=5s --health-retries=5
+        options: --health-cmd="bash -c 'exec 3<>/dev/tcp/localhost/8080'" --health-interval=10s --health-timeout=3s --health-retries=10 --health-start-period=30s
         ports:
           - 8080:8080
 
@@ -44,14 +44,21 @@ jobs:
           echo "Tomcat failed to start" >&2
           exit 1
 
+      - name: Generate report filename
+        run: |
+          COMMIT_SHA=$(git rev-parse --short HEAD)
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          REPORT_NAME="inspec-results-${COMMIT_SHA}-${TIMESTAMP}.json"
+          echo "REPORT_NAME=$REPORT_NAME" >> "$GITHUB_ENV"
+          mkdir -p reports
+
       - name: Execute InSpec baseline
         run: |
-          mkdir -p reports
           cinc-auditor exec . \
             --target "docker://tomcat" \
             --input-file inputs-vanilla.yml \
             --reporter cli \
-            --reporter json:reports/results.json \
+            --reporter json:reports/${REPORT_NAME} \
             --show-progress
 
       - name: Upload InSpec results
@@ -59,4 +66,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: inspec-results
-          path: reports/results.json
+          path: reports/inspec-results-*.json
