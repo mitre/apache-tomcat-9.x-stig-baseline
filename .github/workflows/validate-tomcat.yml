@@ -48,5 +48,6 @@ jobs:
         run: |
           cinc-auditor exec . \
             --target "docker://tomcat" \
+            --input-file inputs-vanilla.yml \
             --reporter cli \
             --show-progress
