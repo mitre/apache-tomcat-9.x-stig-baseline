@@ -1,0 +1,47 @@
+# This file specifies the configurable controls for the Tomcat STIG
+#
+
+# The location of the base directory that can hold multiple tomcat applications
+catalina_base: "/usr/local/tomcat"
+
+# The number of authorized admins requiring simultaneous access to the server.
+max_active_sessions: 1
+
+# The encryption ciphers used to secure a Connector attribute
+ssl_enabled_protocols: "TLSv1.2"
+
+# A boolean parameter to check if the server is placed behind a load balancer
+behind_a_loadbalancer: true
+
+# A boolean parameter to check if the manager applications is installed
+manager_app_installed: false
+
+# A boolean parameter to check if the host-manager applications is installed
+host_manager_app_installed: true
+
+# A boolean parameter to check if JMX process is being used.
+jmx_is_used: true
+
+# If the JMX_is_used parameter is set to true then the IP is needed to verify JMX configuration.
+jmx_ip: ""
+
+# Is there is a documented risk acceptance for not mutually authenticating proxy or load balancer connections?
+mutual_authentication_not_required: false
+
+# Is the server apart of an application server cluster
+cluster_server: true
+
+# The categorization of the operational uptime requirements and RMF system categorization according to the System Security Plan.
+system_categorization: "high"
+
+# The list of authorized apps documented in the System Security Plan and located in the $CATALINA_BASE/webapps directory.
+authorized_web_apps: []
+
+# The list of authorized ports for connectors on the server.
+authorized_connector_ports: ['8080', '8443']
+
+# The list of authorized addresses for connectors on the server.
+authorized_connector_addresses: []
+
+# The location of the JKS Keystore
+keystore_file: []
